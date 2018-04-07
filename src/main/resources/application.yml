@@ -7,21 +7,21 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: Books
+      database: Persons
 # Logging
 logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
   level:
-    com.kaluzny: DEBUG
+    com.data.warehouse: DEBUG
     org.springframework: INFO
     org.mongodb: DEBUG
 # Server configuration
 server:
   port: 8080
   sessionTimeout: 30
-# Security configuration
-security:
-  user:
-    name: user
-    password: user
+### Security configuration
+##security:
+##  user:
+##    name: user
+##    password: user
