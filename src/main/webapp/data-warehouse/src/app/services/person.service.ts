@@ -3,12 +3,6 @@ import { Person } from '../domain/person';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 
-    'Access-Control-Allow-Origin':'*'
-  })
-};
-
 
 @Injectable()
 export class PersonService {
