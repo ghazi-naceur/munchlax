@@ -74,5 +74,10 @@ public class ElasticsearchQueryBuilder<T> {
         return Arrays.asList(response.getHits().getHits());
     }
 
+    public List<T> getDocumentsFromIndexUsingMultiMatchQuery(String index, String value, String... fieldNames) throws IOException {
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.multiMatchQuery(value, fieldNames))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
 
 }

@@ -1,5 +1,5 @@
 1- Create Person :
-POST http://localhost:8080/persons
+POST http://localhost:9200/persons/person/your_id
 {
  "id":"10",
   "firstName":"abc",

@@ -7,6 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import static com.data.warehouse.utils.Constants.PERSON;
 import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
 
@@ -33,6 +37,8 @@ public class Application implements CommandLineRunner {
         // 1
 //        request.getDocumentFromIndex(PERSONS_INDEX, PERSON, "10");
         // 2
-        request.getDocumentsFromIndexUsingMatchQuery(PERSONS_INDEX, "lastName", "Takamura");
+//        request.getDocumentsFromIndexUsingMatchQuery(PERSONS_INDEX, "lastName", "Takamura");
+        // 3
+        request.getDocumentsFromIndexUsingMultiMatchQuery(PERSONS_INDEX, "Takamura", "firstName", "lastName");
     }
 }
