@@ -1,9 +1,6 @@
 package com.data.warehouse;
 
-import com.data.warehouse.dao.Repository;
-import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
-import com.data.warehouse.utils.Constants;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +17,7 @@ public class Application implements CommandLineRunner {
     PersonService personService;
 
     @Autowired
-    ElasticsearchQueryBuilder builder;
+    ElasticsearchQueryBuilder request;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -32,6 +29,10 @@ public class Application implements CommandLineRunner {
 //        personService.savePerson(new Person("1", "Netero", "Isaac", 125, "Hunter"));
 //        personService.savePerson(new Person("2", "Uchiha", "Itachi", 27, "Shinobi"));
 //        personService.savePerson(new Person("3", "Mamoru", "Takamura", 29, "Boxer"));
-        builder.getDocumentFromIndex(PERSONS_INDEX, PERSON, "10");
+
+        // 1
+//        request.getDocumentFromIndex(PERSONS_INDEX, PERSON, "10");
+        // 2
+        request.getDocumentsFromIndexUsingMatchQuery(PERSONS_INDEX, "lastName", "Takamura");
     }
 }

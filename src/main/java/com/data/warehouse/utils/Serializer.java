@@ -12,9 +12,9 @@ import java.io.IOException;
  * Email: ghazi.ennacer@gmail.com
  */
 @SuppressWarnings("unchecked")
-public class Serializer {
+public final class Serializer {
 
-    public Serializer() {
+    private Serializer() {
         super();
     }
 

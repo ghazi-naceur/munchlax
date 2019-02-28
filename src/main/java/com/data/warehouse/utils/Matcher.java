@@ -11,11 +11,11 @@ import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
  * Created by Ghazi Naceur on 28/02/2019
  * Email: ghazi.ennacer@gmail.com
  *
- * Matches between the indice and its respective class
+ * Matches between the index and its respective class
  */
-public class Matcher {
+public final class Matcher {
 
-    public Matcher() {
+    private Matcher() {
         super();
     }
 

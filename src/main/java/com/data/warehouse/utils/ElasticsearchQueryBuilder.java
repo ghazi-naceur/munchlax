@@ -2,21 +2,35 @@ package com.data.warehouse.utils;
 
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.MultiSearchRequest;
+import org.elasticsearch.action.search.MultiSearchResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.data.warehouse.utils.Constants.*;
 
 /**
  * Created by Ghazi Naceur on 26/02/2019
  * Email: ghazi.ennacer@gmail.com
  */
 
+@SuppressWarnings("unchecked")
 @Service
 public class ElasticsearchQueryBuilder<T> {
 
-    // TODO Need to implement logger + exclude the spring logger implementation
+    // TODO Need to implement logger log4j + exclude the spring logger implementation
 
     RestHighLevelClient client;
 
@@ -35,5 +49,30 @@ public class ElasticsearchQueryBuilder<T> {
         }
         return document;
     }
+
+    public List<T> getDocumentsFromIndexUsingMatchQuery(String index, String field, String value) throws IOException {
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.matchQuery(field, value))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
+
+    // TODO implementing a custom exception instead of RuntimeException
+    private <T> List<T> formatResult(String index, SearchSourceBuilder builder) throws IOException {
+        return getDocument(index, builder).stream().map(document -> {
+            try {
+                return (T) Serializer.unmarshallSourceFromString(document.getSourceAsString(), document.getIndex());
+            } catch (Exception e) {
+                throw new RuntimeException();
+            }
+        }).collect(Collectors.toList());
+    }
+
+    private List<SearchHit> getDocument(String index, SearchSourceBuilder builder) throws IOException {
+        SearchRequest request = new SearchRequest(index);
+        request.source(builder);
+        SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+        return Arrays.asList(response.getHits().getHits());
+    }
+
 
 }
