@@ -1,0 +1,9 @@
+1- Create Person :
+POST http://localhost:8080/persons
+{
+ "id":"10",
+  "firstName":"abc",
+  "lastName":"def",
+  "age":10,
+  "occupation":"ghi"
+}

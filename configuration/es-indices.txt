@@ -1,0 +1,26 @@
+1- Persons index + mapping :
+
+PUT http://localhost:9200/persons
+{
+  "mappings": {
+    "person": {
+      "properties": {
+          "id": {
+              "type": "text"
+          },
+          "firstName": {
+              "type": "text"
+          },
+          "lastName": {
+              "type": "text"
+          },
+          "age": {
+              "type": "integer"
+          },
+          "occupation": {
+              "type": "text"
+          }
+      }
+    }
+  }
+}

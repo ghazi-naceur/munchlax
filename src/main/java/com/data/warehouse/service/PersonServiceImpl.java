@@ -1,7 +1,7 @@
 package com.data.warehouse.service;
 
 
-import com.data.warehouse.dao.PersonRepository;
+import com.data.warehouse.dao.Repository;
 import com.data.warehouse.entity.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,26 +9,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service("personService")
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl<T> implements PersonService<T> {
 
     @Autowired
-    PersonRepository personDAO;
+    Repository<T> personDAO;
 
     public Person findById(long id) {
-        Integer i = (int) (long) id;
-        return personDAO.findOne(i);
+        return null;
     }
 
     public Person findByName(String name) {
         return null;
     }
 
-    public void savePerson(Person person) {
-        personDAO.save(person);
+    public void savePerson(T person) {
+        personDAO.create(person);
     }
 
-    public void updatePerson(Person person) {
-        personDAO.insert(person);
+    public void updatePerson(T person) {
+        personDAO.update(person);
     }
 
     @Override
@@ -37,14 +36,15 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public void deletePersonById(Integer id) {
-        personDAO.delete(id);
+//        personDAO.delete(id);
     }
 
     public List<Person> findAllPersons() {
-        return personDAO.findAll();
+//        return personDAO.getAll();
+        return null;
     }
 
-    public boolean isPersonExist(Person person) {
+    public boolean isPersonExist(T person) {
         return true;
     }
 }

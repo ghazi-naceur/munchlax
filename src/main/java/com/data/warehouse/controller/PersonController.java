@@ -23,6 +23,11 @@ public class PersonController {
         service.savePerson(person);
     }
 
+    @RequestMapping(method = RequestMethod.PUT)
+    public void updatePerson(@RequestBody Person person) {
+        service.updatePerson(person);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<Person> findAllPersons() {
         return service.findAllPersons();
