@@ -86,4 +86,12 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
+    public List<T> getDocumentsFromIndexUsingTermsQuery(String index, String field, String... values) throws IOException {
+        // values field must be in lowercase format
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.termsQuery(field,
+                Arrays.stream(values).map(String::toLowerCase).collect(Collectors.toList())))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
+
 }
