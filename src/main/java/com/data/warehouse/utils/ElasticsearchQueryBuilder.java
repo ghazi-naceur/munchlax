@@ -57,7 +57,7 @@ public class ElasticsearchQueryBuilder<T> {
     }
 
     // TODO implementing a custom exception instead of RuntimeException
-    private <T> List<T> formatResult(String index, SearchSourceBuilder builder) throws IOException {
+    private List<T> formatResult(String index, SearchSourceBuilder builder) throws IOException {
         return getDocument(index, builder).stream().map(document -> {
             try {
                 return (T) Serializer.unmarshallSourceFromString(document.getSourceAsString(), document.getIndex());
@@ -76,6 +76,12 @@ public class ElasticsearchQueryBuilder<T> {
 
     public List<T> getDocumentsFromIndexUsingMultiMatchQuery(String index, String value, String... fieldNames) throws IOException {
         SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.multiMatchQuery(value, fieldNames))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
+
+    public List<T> getDocumentsFromIndexUsingTermQuery(String index, String field, String value) throws IOException {
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.termQuery(field, value))
                 .from(FROM).size(RESULT_SIZE);
         return formatResult(index, builder);
     }
