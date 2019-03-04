@@ -2,12 +2,11 @@ package com.data.warehouse.utils;
 
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -104,5 +103,16 @@ public class ElasticsearchQueryBuilder<T> {
     public List<T> getDocumentsFromIndexUsingCustomQuery(String index, SearchSourceBuilder builder) throws IOException {
         return formatResult(index, builder);
     }
+
+    public List<T> getDocumentsFromIndexUsingQueryStringQuery(String index, String defaultField, Operator defaultOperator,
+                                                              String... query) throws IOException {
+        String fieldsWithOperator = Arrays.stream(query).map(Object::toString).
+                collect(Collectors.joining(" " + defaultOperator.toString() + " "));
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.queryStringQuery(fieldsWithOperator)
+                .defaultField(defaultField))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
+
 
 }

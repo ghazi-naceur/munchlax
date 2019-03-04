@@ -2,6 +2,7 @@ package com.data.warehouse;
 
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import java.util.Collections;
 
 import static com.data.warehouse.utils.Constants.PERSON;
 import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
+import static org.elasticsearch.index.query.Operator.AND;
+import static org.elasticsearch.index.query.Operator.OR;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -49,9 +52,11 @@ public class Application implements CommandLineRunner {
         // 6
 //        request.getDocumentsFromIndexUsingPrefixQuery(PERSONS_INDEX, "lastName", "Taka");
         // 7
-        request.getDocumentsFromIndexUsingCustomQuery(PERSONS_INDEX, new SearchSourceBuilder().query(
-                QueryBuilders.boolQuery().filter(QueryBuilders.matchQuery("lastName", "Takamura"))
-                                    .must(QueryBuilders.termQuery("occupation", "ghi"))
-        ));
+//        request.getDocumentsFromIndexUsingCustomQuery(PERSONS_INDEX, new SearchSourceBuilder().query(
+//                QueryBuilders.boolQuery().filter(QueryBuilders.matchQuery("lastName", "Takamura"))
+//                                    .must(QueryBuilders.termQuery("occupation", "ghi"))
+//        ));
+        // 8
+        request.getDocumentsFromIndexUsingQueryStringQuery(PERSONS_INDEX, "lastName", OR, "Takamura", "abc");
     }
 }
