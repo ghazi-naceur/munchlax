@@ -43,6 +43,8 @@ public class Application implements CommandLineRunner {
         // 4
 //        request.getDocumentsFromIndexUsingTermQuery(PERSONS_INDEX, "occupation", "ghi");
         // 5
-        request.getDocumentsFromIndexUsingTermsQuery(PERSONS_INDEX, "occupation",  "ghi", "Shinobi");
+//        request.getDocumentsFromIndexUsingTermsQuery(PERSONS_INDEX, "occupation",  "ghi", "Shinobi");
+        // 6
+        request.getDocumentsFromIndexUsingPrefixQuery(PERSONS_INDEX, "lastName", "Taka");
     }
 }

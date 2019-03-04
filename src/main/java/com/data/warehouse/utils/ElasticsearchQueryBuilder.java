@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.data.warehouse.utils.Constants.*;
+import static com.data.warehouse.utils.Constants.FROM;
+import static com.data.warehouse.utils.Constants.RESULT_SIZE;
 
 /**
  * Created by Ghazi Naceur on 26/02/2019
@@ -93,5 +93,13 @@ public class ElasticsearchQueryBuilder<T> {
                 .from(FROM).size(RESULT_SIZE);
         return formatResult(index, builder);
     }
+
+    public List<T> getDocumentsFromIndexUsingPrefixQuery(String index, String field, String prefixValue) throws IOException {
+        // prefix value => lowercase
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(QueryBuilders.prefixQuery(field, prefixValue.toLowerCase()))
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
+
 
 }
