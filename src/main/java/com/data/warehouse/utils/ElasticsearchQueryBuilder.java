@@ -101,5 +101,8 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
+    public List<T> getDocumentsFromIndexUsingCustomQuery(String index, SearchSourceBuilder builder) throws IOException {
+        return formatResult(index, builder);
+    }
 
 }
