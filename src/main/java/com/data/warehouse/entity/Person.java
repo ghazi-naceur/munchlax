@@ -37,13 +37,6 @@ public class Person implements Comparable<Person>, Serializable {
         this.occupation = occupation;
     }
 
-//     public Person(String id, String firstName, String lastName, Integer age, String occupation) {
-//        this.id = id;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.age = age;
-//        this.occupation = occupation;
-//    }
     public String getId() {
         return id;
     }
@@ -92,6 +85,7 @@ public class Person implements Comparable<Person>, Serializable {
                 age.compareTo(person.getAge()) +
                 occupation.compareTo(person.getOccupation());
     }
+
     public Map<String, Object> toMap(){
         Map<String, Object> person = new HashMap<>();
         person.put("id", this.id);
