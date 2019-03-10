@@ -7,3 +7,13 @@ POST http://localhost:8080/persons
   "age":10,
   "occupation":"ghi"
 }
+
+2- Update Person :
+PUT http://localhost:8080/persons
+{
+ "id":"15",
+  "firstName":"abc2",
+  "lastName":"Takamura",
+  "age":10,
+  "occupation":"ghi"
+}

@@ -2,8 +2,10 @@ package com.data.warehouse.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -21,10 +23,10 @@ import java.util.Map;
 @org.springframework.stereotype.Repository
 public class ElasticsearchRepository<T> implements Repository<T> {
 
-//    static Logger LOGGER = Logger.getLogger(ElasticsearchRepository.class.getName());
+    private static Logger LOGGER = LoggerFactory.getLogger(ElasticsearchRepository.class.getName());
 
     @Autowired
-    ElasticsearchOperations elasticsearchOperations;
+    private ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public T create(T entity) {
@@ -32,7 +34,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             insertIntoElasticsearch(entity);
             return entity;
         } catch (Exception e) {
-//            LOGGER.error("Error when trying to insert the document '" + entity + "' in Elasticsearch : " + e + " - " + e.getCause());
+            LOGGER.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
         }
         return null;
     }
@@ -40,16 +42,41 @@ public class ElasticsearchRepository<T> implements Repository<T> {
     @Override
     public T update(T entity) {
 
-//        String esId = getElasticId(entity);
-        UpdateRequest req = new UpdateRequest();
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> map = mapper.convertValue(entity, Map.class);
-        req.doc(map);
-        UpdateQuery request = new UpdateQuery();
-//        request.setId(esId);
-        request.setUpdateRequest(req);
-        request.setClazz(entity.getClass());
+        String esId = null;
+        String esIndex = null;
+        String esType = null;
         try {
+            Field[] fields = entity.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(Id.class)) {
+                    esId = (String) field.get(entity);
+                }
+            }
+
+            for (Annotation annotation : entity.getClass().getAnnotations()) {
+                Class<? extends Annotation> type = annotation.annotationType();
+                for (Method method : type.getDeclaredMethods()) {
+                    Object value = method.invoke(annotation, (Object[]) null);
+                    if (method.getName().equals("indexName")) {
+                        esIndex = (String) value;
+                    } else if (method.getName().equals("type")) {
+                        esType = (String) value;
+                    }
+                }
+            }
+
+            UpdateRequest req = new UpdateRequest();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> map = mapper.convertValue(entity, Map.class);
+            req.doc(map);
+            UpdateQuery request = new UpdateQuery();
+            request.setId(esId);
+            request.setIndexName(esIndex);
+            request.setType(esType);
+            request.setUpdateRequest(req);
+            request.setClazz(entity.getClass());
+
             elasticsearchOperations.update(request);
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,29 +102,8 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
     public void insertIntoElasticsearch(T entity) {
         try {
-//            String esId = getElasticId(entity);
-
             IndexQuery indexQuery = new IndexQuery();
             indexQuery.setObject(entity);
-
-            // All this work is guaranteed by @Document(indexName="persons", type="person")
-
-//            indexQuery.setSource(entity.toString());
-//            indexQuery.setId("1");
-//            Annotation[] annotations = entity.getClass().getAnnotations();
-//            for (Annotation annotation : annotations) {
-//                if(annotation.annotationType() == Document.class) {
-//                    for (Method method : annotation.annotationType().getDeclaredMethods()) {
-//                        Object value = method.invoke(annotation, (Object[]) null);
-//                        if (method.getName() != null && method.getName().equals("indexName")){
-//                            indexQuery.setIndexName((String)value);
-//                        }
-//                        if (method.getName() != null && method.getName().equals("type")){
-//                            indexQuery.setType((String)value);
-//                        }
-//                    }
-//                }
-//            }
             elasticsearchOperations.index(indexQuery);
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,24 +126,4 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 //            LOGGER.error("Error when trying to insert the '" + entity + "' : " + e + " - " + e.getCause());
         }
     }
-
-    /**
-     public String getElasticId(T entity) {
-     String esId = "";
-     try {
-     Field[] fields = entity.getClass().getDeclaredFields();
-     for (Field field : fields) {
-     field.setAccessible(true);
-     if (field.isAnnotationPresent(PrimaryKeyColumn.class) || field.isAnnotationPresent(PrimaryKey.class)) {
-     esId += field.get(entity);
-     }
-     }
-     esId = esId.replaceAll("\\s+", "");
-     } catch (Exception e) {
-     //            LOGGER.error("Error when trying to retrieve the id '" + esId + "' from the entity '" + entity + "' :: " + e + " - " + e.getCause());
-     }
-     return esId;
-     }
-     */
-
 }

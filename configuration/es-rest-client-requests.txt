@@ -7,3 +7,13 @@ POST http://localhost:9200/persons/person/your_id
   "age":10,
   "occupation":"ghi"
 }
+
+2- Update Person :
+PUT http://localhost:9200/persons/person/your_id
+{
+ "id":"15",
+  "firstName":"abc3",
+  "lastName":"Takamura",
+  "age":10,
+  "occupation":"ghi"
+}

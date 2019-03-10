@@ -35,6 +35,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... arg0) throws Exception {
 
+        //TODO missing unit tests
 //        personService.savePerson(new Person("1", "Netero", "Isaac", 125, "Hunter"));
 //        personService.savePerson(new Person("2", "Uchiha", "Itachi", 27, "Shinobi"));
 //        personService.savePerson(new Person("3", "Mamoru", "Takamura", 29, "Boxer"));
@@ -57,6 +58,6 @@ public class Application implements CommandLineRunner {
 //                                    .must(QueryBuilders.termQuery("occupation", "ghi"))
 //        ));
         // 8
-        request.getDocumentsFromIndexUsingQueryStringQuery(PERSONS_INDEX, "lastName", OR, "Takamura", "abc");
+//        request.getDocumentsFromIndexUsingQueryStringQuery(PERSONS_INDEX, "lastName", OR, "Takamura", "abc");
     }
 }
