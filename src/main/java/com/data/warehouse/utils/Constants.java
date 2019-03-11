@@ -13,5 +13,5 @@ public final class Constants {
     public static final int FROM = 0;
     public static final int RESULT_SIZE = 100;
     public static final String PERSONS_INDEX = "persons";
-    public static final String PERSON = "person";
+    public static final String PERSON_TYPE = "person";
 }

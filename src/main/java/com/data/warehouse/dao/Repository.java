@@ -13,7 +13,7 @@ public interface Repository<T> {
 
     T update(T entity);
 
-    T getById(String idName, String idValue, String table, Class<T> clazz);
+    T getById(String id, String index, String type);
 
     List<T> getAll(String table, Class<T> clazz);
 

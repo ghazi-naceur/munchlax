@@ -1,6 +1,10 @@
 package com.data.warehouse.dao;
 
+import com.data.warehouse.utils.Serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.action.ActionFuture;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +77,18 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return entity;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public T getById(String idName, String idValue, String table, Class<T> clazz) {
+    public T getById(String id, String index, String type) {
+        GetRequest request = new GetRequest(index, type, id);
+        try {
+            ActionFuture<GetResponse> future = elasticsearchOperations.getClient().get(request);
+            GetResponse response = future.get();
+            Object object = Serializer.getObject(response.getSource(), request.index());
+            return (T)object;
+        } catch (Exception e){
+            LOGGER.error("Error when trying to get the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
+        }
         return null;
     }
 

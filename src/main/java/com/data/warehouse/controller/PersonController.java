@@ -3,7 +3,7 @@ package com.data.warehouse.controller;
 
 import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
-import com.data.warehouse.utils.Matcher;
+import com.data.warehouse.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +35,8 @@ public class PersonController {
     }
 
     @GetMapping(value = "/{id}")
-    public Person findPersonById(@PathVariable Integer id) {
-        return service.findById(id);
+    public Person findPersonById(@PathVariable String id) {
+        return service.findById(id, Constants.PERSONS_INDEX, Constants.PERSON_TYPE);
     }
 
     @DeleteMapping(value = "/{id}")

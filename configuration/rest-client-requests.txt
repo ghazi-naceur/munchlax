@@ -17,3 +17,6 @@ PUT http://localhost:8080/persons
   "age":10,
   "occupation":"ghi"
 }
+
+3- Get Person By ID :
+GET http://localhost:8080/persons/15

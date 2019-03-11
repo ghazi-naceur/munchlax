@@ -17,3 +17,6 @@ PUT http://localhost:9200/persons/person/your_id
   "age":10,
   "occupation":"ghi"
 }
+
+3- Get Person By ID :
+GET http://localhost:9200/persons/person/your_id

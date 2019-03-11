@@ -2,22 +2,10 @@ package com.data.warehouse;
 
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-import static com.data.warehouse.utils.Constants.PERSON;
-import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
-import static org.elasticsearch.index.query.Operator.AND;
-import static org.elasticsearch.index.query.Operator.OR;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -29,7 +17,9 @@ public class Application implements CommandLineRunner {
     ElasticsearchQueryBuilder request;
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        new SpringApplicationBuilder(Application.class)
+                .logStartupInfo(false)
+                .run(args);
     }
 
     @Override
@@ -41,7 +31,7 @@ public class Application implements CommandLineRunner {
 //        personService.savePerson(new Person("3", "Mamoru", "Takamura", 29, "Boxer"));
 
         // 1
-//        request.getDocumentFromIndex(PERSONS_INDEX, PERSON, "10");
+//        request.getDocumentFromIndex(PERSONS_INDEX, PERSON_TYPE, "10");
         // 2
 //        request.getDocumentsFromIndexUsingMatchQuery(PERSONS_INDEX, "lastName", "Takamura");
         // 3

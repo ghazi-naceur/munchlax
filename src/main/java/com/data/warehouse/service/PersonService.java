@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PersonService<T> {
 
-    Person findById(long id);
+    Person findById(String id, String index, String type);
 
     Person findByName(String name);
 

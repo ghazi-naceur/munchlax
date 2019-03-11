@@ -14,8 +14,8 @@ public class PersonServiceImpl<T> implements PersonService<T> {
     @Autowired
     Repository<T> personDAO;
 
-    public Person findById(long id) {
-        return null;
+    public Person findById(String id, String index, String type) {
+        return (Person) personDAO.getById(id, index, type);
     }
 
     public Person findByName(String name) {
