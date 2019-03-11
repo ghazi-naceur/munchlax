@@ -20,3 +20,8 @@ PUT http://localhost:9200/persons/person/your_id
 
 3- Get Person By ID :
 GET http://localhost:9200/persons/person/your_id
+
+4- Delete Person : goto 5-
+
+5- Delete Person By ID :
+DELETE http://localhost:9200/persons/person/your_id

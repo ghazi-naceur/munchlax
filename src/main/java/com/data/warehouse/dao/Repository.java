@@ -18,4 +18,6 @@ public interface Repository<T> {
     List<T> getAll(String table, Class<T> clazz);
 
     void delete(T entity);
+
+    void deleteEntityById(String index, String type, String id);
 }

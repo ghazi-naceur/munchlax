@@ -20,3 +20,18 @@ PUT http://localhost:8080/persons
 
 3- Get Person By ID :
 GET http://localhost:8080/persons/15
+
+4- Delete Person :
+DELETE http://localhost:8080/persons
+{
+   "id" : "10",
+    "firstName" : "abc",
+    "lastName" : "def",
+    "age" : 10,
+    "occupation" : "ghi"
+}
+
+5- Delete Person By ID :
+DELETE http://localhost:8080/persons/11
+{
+}

@@ -15,7 +15,9 @@ public interface PersonService<T> {
 
     void updatePerson(T person);
 
-    void deletePersonById(long id);
+    void deletePerson(T entity);
+
+    void deletePersonById(String index, String type, String id);
 
     List<Person> findAllPersons();
 

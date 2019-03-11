@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.data.warehouse.utils.Constants.PERSON_TYPE;
+
 @SuppressWarnings("all")
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -36,11 +38,16 @@ public class PersonController {
 
     @GetMapping(value = "/{id}")
     public Person findPersonById(@PathVariable String id) {
-        return service.findById(id, Constants.PERSONS_INDEX, Constants.PERSON_TYPE);
+        return service.findById(id, Constants.PERSONS_INDEX, PERSON_TYPE);
+    }
+
+    @DeleteMapping
+    public void deletePerson(@RequestBody Person person) {
+        service.deletePerson(person);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deletePersonWithId(@PathVariable int id) {
-        service.deletePersonById(id);
+    public void deletePersonById(@PathVariable String id) {
+        service.deletePersonById(Constants.PERSONS_INDEX, PERSON_TYPE, id);
     }
 }

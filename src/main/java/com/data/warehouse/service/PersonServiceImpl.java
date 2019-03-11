@@ -31,12 +31,12 @@ public class PersonServiceImpl<T> implements PersonService<T> {
     }
 
     @Override
-    public void deletePersonById(long id) {
-
+    public void deletePerson(T entity) {
+        personDAO.delete(entity);
     }
 
-    public void deletePersonById(Integer id) {
-//        personDAO.delete(id);
+    public void deletePersonById(String index, String type, String id) {
+        personDAO.deleteEntityById(index, type, id);
     }
 
     public List<Person> findAllPersons() {

@@ -85,8 +85,8 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             ActionFuture<GetResponse> future = elasticsearchOperations.getClient().get(request);
             GetResponse response = future.get();
             Object object = Serializer.getObject(response.getSource(), request.index());
-            return (T)object;
-        } catch (Exception e){
+            return (T) object;
+        } catch (Exception e) {
             LOGGER.error("Error when trying to get the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
         }
         return null;
@@ -99,8 +99,25 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
     @Override
     public void delete(T entity) {
-//        String esId = getElasticId(entity);
-//        elasticsearchOperations.delete(entity.getClass(), esId);
+        String esId = null;
+        String esIndex = null;
+        String esType = null;
+        try {
+            IndexTypeIdExtractor indexTypeIdExtractor = new IndexTypeIdExtractor(entity, esId, esIndex, esType).invoke();
+            esId = indexTypeIdExtractor.getEsId();
+            elasticsearchOperations.delete(entity.getClass(), esId);
+        } catch (Exception e) {
+            LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", esId, e.getCause());
+        }
+    }
+
+    @Override
+    public void deleteEntityById(String index, String type, String id) {
+        try {
+            elasticsearchOperations.delete(index, type, id);
+        } catch (Exception e) {
+            LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
+        }
     }
 
     private class IndexTypeIdExtractor {
