@@ -12,6 +12,7 @@ import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,9 @@ public class ElasticsearchRepository<T> implements Repository<T> {
     @Override
     public T create(T entity) {
         try {
-            insertIntoElasticsearch(entity);
+            IndexQuery indexQuery = new IndexQuery();
+            indexQuery.setObject(entity);
+            elasticsearchOperations.index(indexQuery);
             return entity;
         } catch (Exception e) {
             LOGGER.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
@@ -39,6 +42,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T update(T entity) {
 
@@ -46,25 +50,10 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         String esIndex = null;
         String esType = null;
         try {
-            Field[] fields = entity.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(Id.class)) {
-                    esId = (String) field.get(entity);
-                }
-            }
-
-            for (Annotation annotation : entity.getClass().getAnnotations()) {
-                Class<? extends Annotation> type = annotation.annotationType();
-                for (Method method : type.getDeclaredMethods()) {
-                    Object value = method.invoke(annotation, (Object[]) null);
-                    if (method.getName().equals("indexName")) {
-                        esIndex = (String) value;
-                    } else if (method.getName().equals("type")) {
-                        esType = (String) value;
-                    }
-                }
-            }
+            IndexTypeIdExtractor indexTypeIdExtractor = new IndexTypeIdExtractor(entity, esId, esIndex, esType).invoke();
+            esId = indexTypeIdExtractor.getEsId();
+            esIndex = indexTypeIdExtractor.getEsIndex();
+            esType = indexTypeIdExtractor.getEsType();
 
             UpdateRequest req = new UpdateRequest();
             ObjectMapper mapper = new ObjectMapper();
@@ -79,7 +68,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
             elasticsearchOperations.update(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error when trying to update the document '{}' in Elasticsearch : {} ", entity, e.getCause());
         }
         return entity;
     }
@@ -100,30 +89,52 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 //        elasticsearchOperations.delete(entity.getClass(), esId);
     }
 
-    public void insertIntoElasticsearch(T entity) {
-        try {
-            IndexQuery indexQuery = new IndexQuery();
-            indexQuery.setObject(entity);
-            elasticsearchOperations.index(indexQuery);
-        } catch (Exception e) {
-            e.printStackTrace();
-//            LOGGER.error("Error when trying to insert the '" + entity + "' : " + e + " - " + e.getCause());
+    private class IndexTypeIdExtractor {
+        private T entity;
+        private String esId;
+        private String esIndex;
+        private String esType;
+
+        public IndexTypeIdExtractor(T entity, String esId, String esIndex, String esType) {
+            this.entity = entity;
+            this.esId = esId;
+            this.esIndex = esIndex;
+            this.esType = esType;
         }
-    }
 
-    public void insertIntoElasticsearchWithFixedId(T entity) {
-        try {
-            String esId = "fixed_id";
+        public String getEsId() {
+            return esId;
+        }
 
-            IndexQuery indexQuery = new IndexQuery();
-            indexQuery.setObject(entity);
-            indexQuery.setId(esId);
-            indexQuery.setIndexName("persons");
-            indexQuery.setType("person");
+        public String getEsIndex() {
+            return esIndex;
+        }
 
-            elasticsearchOperations.index(indexQuery);
-        } catch (Exception e) {
-//            LOGGER.error("Error when trying to insert the '" + entity + "' : " + e + " - " + e.getCause());
+        public String getEsType() {
+            return esType;
+        }
+
+        public IndexTypeIdExtractor invoke() throws IllegalAccessException, InvocationTargetException {
+            Field[] fields = entity.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(Id.class)) {
+                    esId = (String) field.get(entity);
+                }
+            }
+
+            for (Annotation annotation : entity.getClass().getAnnotations()) {
+                Class<? extends Annotation> type = annotation.annotationType();
+                for (Method method : type.getDeclaredMethods()) {
+                    Object value = method.invoke(annotation, (Object[]) null);
+                    if (method.getName().equals("indexName")) {
+                        esIndex = (String) value;
+                    } else if (method.getName().equals("type")) {
+                        esType = (String) value;
+                    }
+                }
+            }
+            return this;
         }
     }
 }
