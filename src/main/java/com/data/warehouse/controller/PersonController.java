@@ -5,7 +5,11 @@ import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -20,34 +24,49 @@ public class PersonController {
     @Autowired
     private PersonService service;
 
-    // TODO expose a DTO for person .. currently this is not urgent
+    // TODO expose a DTO for person + failure cases are not all managed
     @PostMapping
-    public void createPerson(@RequestBody Person person) {
+    public ResponseEntity<Void> createPerson(@RequestBody Person person, UriComponentsBuilder ucBuilder) {
         service.savePerson(person);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(person.getId()).toUri());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public void updatePerson(@RequestBody Person person) {
+    public ResponseEntity<Void> updatePerson(@RequestBody Person person) {
         service.updatePerson(person);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping()
-    public List<Person> findAllPersons() {
-        return service.findAllPersons();
+    public ResponseEntity<List<Person>> findAllPersons() {
+        List<Person> persons = service.findAllPersons();
+        if (persons.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You can return HttpStatus.NOT_FOUND
+        }
+        return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public Person findPersonById(@PathVariable String id) {
-        return service.findById(id, Constants.PERSONS_INDEX, PERSON_TYPE);
+    public ResponseEntity<Person> findPersonById(@PathVariable String id) {
+        Person person = service.findById(id, Constants.PERSONS_INDEX, PERSON_TYPE);
+        if (person == null) {
+            System.out.println("Person with id " + id + " not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void deletePerson(@RequestBody Person person) {
+    public ResponseEntity<Person> deletePerson(@RequestBody Person person) {
         service.deletePerson(person);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deletePersonById(@PathVariable String id) {
+    public ResponseEntity<Person> deletePersonById(@PathVariable String id) {
         service.deletePersonById(Constants.PERSONS_INDEX, PERSON_TYPE, id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
