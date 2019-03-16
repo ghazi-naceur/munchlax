@@ -1,4 +1,7 @@
 <h1>Persons</h1>
+<h3 *ngIf="personIdToUpdate; else create"> 
+  Update Person for Id: {{personIdToUpdate}}
+</h3>
 <ng-template #create>
   <h3> Create New Person</h3>
 </ng-template>
@@ -36,9 +39,9 @@
       </tr>
       <tr>
         <td colspan="2">
-          <button>CREATE</button>
-          <!-- <button *ngIf="personIdToUpdate">UPDATE</button> -->
-          <!-- <button (click)="backToCreatePerson()" *ngIf="personIdToUpdate">Go Back</button> -->
+          <button *ngIf="!personIdToUpdate">CREATE</button>
+          <button *ngIf="personIdToUpdate">UPDATE</button>
+          <button (click)="backToCreatePerson()" *ngIf="personIdToUpdate">Go Back</button>
         </td>
       </tr>
     </table>
@@ -72,7 +75,7 @@
     <th>Last name</th>
     <th>Age</th>
     <th>Occupation</th>
-    <!-- <th></th> -->
+    <th></th>
     <!-- <th></th> -->
   </tr>
   <tr *ngFor="let person of persons">
@@ -80,7 +83,7 @@
     <td>{{person.lastName}}</td>
     <td>{{person.age}}</td>
     <td>{{person.occupation}}</td>
-    <!-- <td><button type="button" (click)="loadPersonToEdit(person.id)">Edit</button> </td> -->
+    <td><button type="button" (click)="loadPersonToEdit(person.id)">Edit</button> </td>
     <!-- <td><button type="button" (click)="deletePerson(person.id)">Delete</button></td> -->
   </tr>
 </table>

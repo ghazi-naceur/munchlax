@@ -46,13 +46,25 @@ export class PersonComponent implements OnInit {
         // this.personService.createPerson(person)
         //     .subscribe(data => console.log(data), error => console.log(error));
 
-        this.personService.createPerson(person)
-            .subscribe(successCode => {
-                this.statusCode = successCode;
-                this.backToCreatePerson();
-            },
-                errorCode => this.statusCode = errorCode
-            );
+        if (this.personIdToUpdate == null) {
+            this.personService.createPerson(person)
+                .subscribe(successCode => {
+                    this.statusCode = successCode;
+                    this.backToCreatePerson();
+                },
+                    errorCode => this.statusCode = errorCode
+                );
+        } else {
+            person.id = this.personIdToUpdate;
+            this.personService.updatePerson(person)
+                .subscribe(successCode => {
+                    this.statusCode = successCode;
+                    this.getAllPersons();
+                    this.backToCreatePerson();
+                },
+                    errorCode => this.statusCode = errorCode);
+        }
+
 
     }
 
@@ -68,8 +80,22 @@ export class PersonComponent implements OnInit {
 
     getAllPersons() {
         this.personService.getAllPersons()
-		  .subscribe(
+            .subscribe(
                 data => this.persons = data,
-                errorCode =>  this.statusCode = errorCode);   
-   }
+                errorCode => this.statusCode = errorCode);
+    }
+
+    loadPersonToEdit(personId: string) {
+        this.preProcessConfigurations();
+        this.personService.getPersonById(personId)
+            .subscribe(person => {
+                      this.personIdToUpdate = person.id;   
+                      this.personForm.setValue({ firstName: person.firstName,
+                                                lastName: person.lastName, age: person.age,
+                                                occupation: person.occupation });
+                      this.processValidation = true;
+                      this.requestProcessing = false;   
+                  },
+                  errorCode =>  this.statusCode = errorCode);   
+     }
 }

@@ -13,7 +13,7 @@ public interface PersonService<T> {
 
     void savePerson(T person);
 
-    void updatePerson(T person);
+    void updatePerson(T person, String index, String type, String id);
 
     void deletePerson(T entity);
 

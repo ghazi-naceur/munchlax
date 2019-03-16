@@ -26,8 +26,8 @@ public class PersonServiceImpl<T> implements PersonService<T> {
         personDAO.create(person);
     }
 
-    public void updatePerson(T person) {
-        personDAO.update(person);
+    public void updatePerson(T person, String index, String type, String id) {
+        personDAO.update(person, index, type, id);
     }
 
     @Override

@@ -55,25 +55,17 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public T update(T entity) {
+    public T update(T entity, String index, String type, String id) {
 
-        String esId = null;
-        String esIndex = null;
-        String esType = null;
         try {
-            IndexTypeIdExtractor indexTypeIdExtractor = new IndexTypeIdExtractor(entity, esId, esIndex, esType).invoke();
-            esId = indexTypeIdExtractor.getEsId();
-            esIndex = indexTypeIdExtractor.getEsIndex();
-            esType = indexTypeIdExtractor.getEsType();
-
             UpdateRequest req = new UpdateRequest();
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = mapper.convertValue(entity, Map.class);
             req.doc(map);
             UpdateQuery request = new UpdateQuery();
-            request.setId(esId);
-            request.setIndexName(esIndex);
-            request.setType(esType);
+            request.setId(id);
+            request.setIndexName(index);
+            request.setType(type);
             request.setUpdateRequest(req);
             request.setClazz(entity.getClass());
 

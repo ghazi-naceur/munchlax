@@ -49,4 +49,21 @@ export class PersonService {
 	    let body = res.json();
         return body;
     }
+
+    updatePerson(person: Person):Observable<number> {
+	    let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: contentTypeHeader });
+        return this.http.put(this.personUrl, person, options)
+               .map(success => success.status)
+               .catch(this.handleError);
+    }
+
+    getPersonById(personId: string): Observable<Person> {
+		let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: contentTypeHeader });
+		console.log(this.personUrl +"/"+ personId);
+		return this.http.get(this.personUrl +"/"+ personId, options)
+			   .map(this.extractData)
+			   .catch(this.handleError);
+    }
 }

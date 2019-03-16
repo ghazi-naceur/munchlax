@@ -11,7 +11,7 @@ public interface Repository<T> {
 
     T create(T entity);
 
-    T update(T entity);
+    T update(T entity, String index, String type, String id);
 
     T getById(String id, String index, String type);
 

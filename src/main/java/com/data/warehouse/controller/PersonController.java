@@ -36,7 +36,7 @@ public class PersonController {
 
     @PutMapping
     public ResponseEntity<Void> updatePerson(@RequestBody Person person) {
-        service.updatePerson(person);
+        service.updatePerson(person, PERSONS_INDEX, PERSON_TYPE, person.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
