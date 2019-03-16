@@ -1,0 +1,86 @@
+<h1>Persons</h1>
+<ng-template #create>
+  <h3> Create New Person</h3>
+</ng-template>
+<div>
+  <form [formGroup]="personForm" (ngSubmit)="onPersonFormSubmit()">
+    <table>
+      <tr>
+      <td>Enter First name</td>
+      <td><input formControlName="firstName">
+        <label *ngIf="personForm.get('firstName').invalid && processValidation" [ngClass]="'error'"> First name is
+          required. </label>
+      </td>
+      </tr>
+      <tr>
+        <td>Enter Last name</td>
+        <td><input formControlName="lastName">
+          <label *ngIf="personForm.get('lastName').invalid && processValidation" [ngClass]="'error'"> Last name is
+            required. </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Enter age</td>
+        <td><input formControlName="age">
+          <label *ngIf="personForm.get('age').invalid && processValidation" [ngClass]="'error'"> Age is
+            required. </label>
+        </td>
+      </tr>
+      <tr>
+      <tr>
+        <td>Enter occupation</td>
+        <td><input formControlName="occupation">
+          <label *ngIf="personForm.get('occupation').invalid && processValidation" [ngClass]="'error'"> Ocuupation is
+            required. </label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button>CREATE</button>
+          <!-- <button *ngIf="personIdToUpdate">UPDATE</button> -->
+          <!-- <button (click)="backToCreatePerson()" *ngIf="personIdToUpdate">Go Back</button> -->
+        </td>
+      </tr>
+    </table>
+  </form>
+  <br />
+  <div *ngIf="statusCode; else processing">
+    <div *ngIf="statusCode === 201" [ngClass]="'success'">
+      Person added successfully.
+    </div>
+    <div *ngIf="statusCode === 409" [ngClass]="'success'">
+      Person already exists.
+    </div>
+    <div *ngIf="statusCode === 200" [ngClass]="'success'">
+      Person updated successfully.
+    </div>
+    <div *ngIf="statusCode === 204" [ngClass]="'success'">
+      Person deleted successfully.
+    </div>
+    <div *ngIf="statusCode === 500" [ngClass]="'error'">
+      Internal Server Error.
+    </div>
+  </div>
+  <ng-template #processing>
+    <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+  </ng-template>
+</div>
+<h3>Persons Details</h3>
+<table>
+  <tr>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Age</th>
+    <th>Occupation</th>
+    <!-- <th></th> -->
+    <!-- <th></th> -->
+  </tr>
+  <tr *ngFor="let person of persons">
+    <td>{{person.firstName}}</td>
+    <td>{{person.lastName}}</td>
+    <td>{{person.age}}</td>
+    <td>{{person.occupation}}</td>
+    <!-- <td><button type="button" (click)="loadPersonToEdit(person.id)">Edit</button> </td> -->
+    <!-- <td><button type="button" (click)="deletePerson(person.id)">Delete</button></td> -->
+  </tr>
+</table>
