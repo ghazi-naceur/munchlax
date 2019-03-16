@@ -1,5 +1,6 @@
 package com.data.warehouse.dao;
 
+import com.data.warehouse.entity.Entity;
 import com.data.warehouse.utils.Serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.ActionFuture;
@@ -20,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Ghazi Ennacer on 01/01/2019.
@@ -36,6 +38,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
     @Override
     public T create(T entity) {
         try {
+            ((Entity) entity).setId(UUID.randomUUID().toString());
             IndexQuery indexQuery = new IndexQuery();
             indexQuery.setObject(entity);
             elasticsearchOperations.index(indexQuery);

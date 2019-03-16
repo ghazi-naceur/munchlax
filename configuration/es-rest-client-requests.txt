@@ -25,3 +25,11 @@ GET http://localhost:9200/persons/person/your_id
 
 5- Delete Person By ID :
 DELETE http://localhost:9200/persons/person/your_id
+
+6- Cleanup Person index :
+POST http://localhost:9200/persons/_delete_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+}

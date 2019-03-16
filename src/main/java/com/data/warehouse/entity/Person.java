@@ -3,7 +3,6 @@ package com.data.warehouse.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
@@ -11,10 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Document(indexName = "persons", type = "person")
-public class Person implements Comparable<Person>, Serializable {
-
-    @Id
-    private String id;
+public class Person extends Entity implements Comparable<Person>, Serializable {
 
     private String firstName;
 
@@ -25,24 +21,14 @@ public class Person implements Comparable<Person>, Serializable {
     private String occupation;
 
     @JsonCreator
-    public Person(@JsonProperty(value = "id", required = true) String id,
-                  @JsonProperty(value = "firstName") String firstName,
+    public Person(@JsonProperty(value = "firstName") String firstName,
                   @JsonProperty(value = "lastName") String lastName,
                   @JsonProperty(value = "age") Integer age,
                   @JsonProperty(value = "occupation") String occupation) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.occupation = occupation;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -86,7 +72,7 @@ public class Person implements Comparable<Person>, Serializable {
                 occupation.compareTo(person.getOccupation());
     }
 
-    public Map<String, Object> toMap(){
+    public Map<String, Object> toMap() {
         Map<String, Object> person = new HashMap<>();
         person.put("id", this.id);
         person.put("firstName", this.firstName);

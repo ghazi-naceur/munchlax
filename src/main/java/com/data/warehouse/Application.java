@@ -2,6 +2,8 @@ package com.data.warehouse;
 
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +11,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
+
+    private static Logger logger = LoggerFactory.getLogger(Application.class.getName());
 
     @Autowired
     PersonService personService;
@@ -24,11 +28,9 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... arg0) throws Exception {
-
+        logger.info("Munchlax started ...");
         //TODO missing unit tests
-//        personService.savePerson(new Person("1", "Netero", "Isaac", 125, "Hunter"));
-//        personService.savePerson(new Person("2", "Uchiha", "Itachi", 27, "Shinobi"));
-//        personService.savePerson(new Person("3", "Mamoru", "Takamura", 29, "Boxer"));
+//        personService.savePerson(new Person("Netero", "Isaac", 125, "Hunter"));
 
         // 1
 //        request.getDocumentFromIndex(PERSONS_INDEX, PERSON_TYPE, "10");

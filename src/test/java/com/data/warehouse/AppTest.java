@@ -22,7 +22,7 @@ public class AppTest {
 
     @Test
     public void createPerson() {
-        Person person = new Person("4", "Freecss", "Don", 300, "Hunter");
+        Person person = new Person( "Freecss", "Don", 300, "Hunter");
     }
 
     @Test
