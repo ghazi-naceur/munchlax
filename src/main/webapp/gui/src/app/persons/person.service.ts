@@ -37,4 +37,16 @@ export class PersonService {
             .map(success => success.status)
             .catch(this.handleError);
     }
+
+    getAllPersons(): Observable<Person[]> {
+        return this.http.get(this.personUrl)
+		   		.map(this.extractData)
+		        .catch(this.handleError);
+
+    }
+
+    private extractData(res: Response) {
+	    let body = res.json();
+        return body;
+    }
 }

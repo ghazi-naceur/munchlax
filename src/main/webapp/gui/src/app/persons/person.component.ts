@@ -13,7 +13,7 @@ import { Person } from './person';
 export class PersonComponent implements OnInit {
 
     //Component properties
-    allPersons: Person[];
+    persons: Person[];
     statusCode: number;
     requestProcessing = false;
     personIdToUpdate = null;
@@ -31,7 +31,7 @@ export class PersonComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // this.getAllPersons();
+        this.getAllPersons();
     }
 
     onPersonFormSubmit() {
@@ -65,4 +65,11 @@ export class PersonComponent implements OnInit {
         this.statusCode = null;
         this.requestProcessing = true;
     }
+
+    getAllPersons() {
+        this.personService.getAllPersons()
+		  .subscribe(
+                data => this.persons = data,
+                errorCode =>  this.statusCode = errorCode);   
+   }
 }
