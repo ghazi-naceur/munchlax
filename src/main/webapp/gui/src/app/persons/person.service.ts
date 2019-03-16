@@ -13,6 +13,9 @@ import { Person } from './person';
 export class PersonService {
     //URL for CRUD operations
     personUrl = "http://localhost:8080/persons";
+
+    contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
+    options = new RequestOptions({ headers: this.contentTypeHeader });
     //Create constructor to get Http instance
     constructor(private http: Http, private httpClient: HttpClient) {
     }
@@ -31,9 +34,7 @@ export class PersonService {
     }
 
     createPerson(person: Person): Observable<number> {
-        let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: contentTypeHeader });
-        return this.http.post(this.personUrl, person, options)
+        return this.http.post(this.personUrl, person, this.options)
             .map(success => success.status)
             .catch(this.handleError);
     }
@@ -42,7 +43,6 @@ export class PersonService {
         return this.http.get(this.personUrl)
 		   		.map(this.extractData)
 		        .catch(this.handleError);
-
     }
 
     private extractData(res: Response) {
@@ -51,26 +51,20 @@ export class PersonService {
     }
 
     updatePerson(person: Person):Observable<number> {
-	    let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: contentTypeHeader });
-        return this.http.put(this.personUrl, person, options)
+        return this.http.put(this.personUrl, person, this.options)
                .map(success => success.status)
                .catch(this.handleError);
     }
 
     getPersonById(personId: string): Observable<Person> {
-		let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers: contentTypeHeader });
 		console.log(this.personUrl +"/"+ personId);
-		return this.http.get(this.personUrl +"/"+ personId, options)
+		return this.http.get(this.personUrl +"/"+ personId, this.options)
 			   .map(this.extractData)
 			   .catch(this.handleError);
     }
 
     deletePersonById(personId: string): Observable<number> {
-		let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers: contentTypeHeader });
-		return this.http.delete(this.personUrl +"/"+ personId)
+		return this.http.delete(this.personUrl +"/"+ personId, this.options)
 			   .map(success => success.status)
 			   .catch(this.handleError);
     }
