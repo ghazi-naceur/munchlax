@@ -89,13 +89,28 @@ export class PersonComponent implements OnInit {
         this.preProcessConfigurations();
         this.personService.getPersonById(personId)
             .subscribe(person => {
-                      this.personIdToUpdate = person.id;   
-                      this.personForm.setValue({ firstName: person.firstName,
-                                                lastName: person.lastName, age: person.age,
-                                                occupation: person.occupation });
-                      this.processValidation = true;
-                      this.requestProcessing = false;   
-                  },
-                  errorCode =>  this.statusCode = errorCode);   
-     }
+                this.personIdToUpdate = person.id;
+                this.personForm.setValue({
+                    firstName: person.firstName,
+                    lastName: person.lastName, age: person.age,
+                    occupation: person.occupation
+                });
+                this.processValidation = true;
+                this.requestProcessing = false;
+            },
+                errorCode => this.statusCode = errorCode);
+    }
+
+    deletePerson(personId: string) {
+        this.preProcessConfigurations();
+        this.personService.deletePersonById(personId)
+            .subscribe(successCode => {
+                //this.statusCode = successCode;
+                //Expecting success code 204 from server
+                this.statusCode = 204;
+                this.getAllPersons();
+                this.backToCreatePerson();
+            },
+                errorCode => this.statusCode = errorCode);
+    }
 }

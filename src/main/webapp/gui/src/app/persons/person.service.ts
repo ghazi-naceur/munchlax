@@ -66,4 +66,12 @@ export class PersonService {
 			   .map(this.extractData)
 			   .catch(this.handleError);
     }
+
+    deletePersonById(personId: string): Observable<number> {
+		let contentTypeHeader = new Headers({ 'Content-Type': 'application/json' });
+		let options = new RequestOptions({ headers: contentTypeHeader });
+		return this.http.delete(this.personUrl +"/"+ personId)
+			   .map(success => success.status)
+			   .catch(this.handleError);
+    }
 }

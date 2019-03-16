@@ -76,7 +76,7 @@
     <th>Age</th>
     <th>Occupation</th>
     <th></th>
-    <!-- <th></th> -->
+    <th></th>
   </tr>
   <tr *ngFor="let person of persons">
     <td>{{person.firstName}}</td>
@@ -84,6 +84,6 @@
     <td>{{person.age}}</td>
     <td>{{person.occupation}}</td>
     <td><button type="button" (click)="loadPersonToEdit(person.id)">Edit</button> </td>
-    <!-- <td><button type="button" (click)="deletePerson(person.id)">Delete</button></td> -->
+    <td><button type="button" (click)="deletePerson(person.id)">Delete</button></td>
   </tr>
 </table>
