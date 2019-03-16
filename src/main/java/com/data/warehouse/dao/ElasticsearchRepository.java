@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -95,9 +99,25 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<T> getAll(String table, Class<T> clazz) {
-        return null;
+    public List<T> getAll(String index, String type) {
+
+        List<T> entities = new ArrayList<>();
+        try {
+            SearchResponse response = elasticsearchOperations.getClient().prepareSearch(index)
+                    .setTypes(type)
+                    .setQuery(QueryBuilders.matchAllQuery())
+                    .execute()
+                    .actionGet();
+            for (SearchHit hit : response.getHits()) {
+                entities.add((T) Serializer.getObject(hit.getSourceAsMap(), index));
+            }
+            return entities;
+        } catch (Exception e) {
+            LOGGER.error("Error when trying to retrieve multiple documents from the index '{}' in Elasticsearch : {} ", index, e.getCause());
+        }
+        return entities;
     }
 
     @Override

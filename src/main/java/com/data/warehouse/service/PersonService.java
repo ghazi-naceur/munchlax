@@ -19,7 +19,7 @@ public interface PersonService<T> {
 
     void deletePersonById(String index, String type, String id);
 
-    List<Person> findAllPersons();
+    List<T> findAllPersons(String index, String type);
 
     public boolean isPersonExist(T person);
 }

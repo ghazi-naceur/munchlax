@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
 import static com.data.warehouse.utils.Constants.PERSON_TYPE;
 
 @SuppressWarnings("all")
@@ -41,7 +42,7 @@ public class PersonController {
 
     @GetMapping()
     public ResponseEntity<List<Person>> findAllPersons() {
-        List<Person> persons = service.findAllPersons();
+        List<Person> persons = service.findAllPersons(PERSONS_INDEX, PERSON_TYPE);
         if (persons.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You can return HttpStatus.NOT_FOUND
         }
@@ -50,7 +51,7 @@ public class PersonController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Person> findPersonById(@PathVariable String id) {
-        Person person = service.findById(id, Constants.PERSONS_INDEX, PERSON_TYPE);
+        Person person = service.findById(id, PERSONS_INDEX, PERSON_TYPE);
         if (person == null) {
             System.out.println("Person with id " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,7 +67,7 @@ public class PersonController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Person> deletePersonById(@PathVariable String id) {
-        service.deletePersonById(Constants.PERSONS_INDEX, PERSON_TYPE, id);
+        service.deletePersonById(PERSONS_INDEX, PERSON_TYPE, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

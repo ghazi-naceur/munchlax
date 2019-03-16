@@ -33,3 +33,11 @@ POST http://localhost:9200/persons/_delete_by_query
     "match_all": {}
   }
 }
+
+7- Match all query :
+POST/GET http://localhost:9200/persons/_search
+{
+  "query": {
+      "match_all": {}
+  }
+}

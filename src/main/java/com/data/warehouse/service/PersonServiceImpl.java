@@ -39,9 +39,8 @@ public class PersonServiceImpl<T> implements PersonService<T> {
         personDAO.deleteEntityById(index, type, id);
     }
 
-    public List<Person> findAllPersons() {
-//        return personDAO.getAll();
-        return null;
+    public List<T> findAllPersons(String index, String type) {
+        return personDAO.getAll(index, type);
     }
 
     public boolean isPersonExist(T person) {
