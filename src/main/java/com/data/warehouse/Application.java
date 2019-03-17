@@ -1,7 +1,9 @@
 package com.data.warehouse;
 
+import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
+import com.data.warehouse.utils.ReflectionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +53,8 @@ public class Application implements CommandLineRunner {
 //        ));
         // 8
 //        request.getDocumentsFromIndexUsingQueryStringQuery(PERSONS_INDEX, "lastName", OR, "Takamura", "abc");
+//        ReflectionHelper.getNonSpecialFields(new Person("aaa", "bbb", 22, "ccc"));
+//        ReflectionHelper.getEsIndex(new Person("aaa", "bbb", 22, "ccc"));
+//        ReflectionHelper.getEsType(new Person("aaa", "bbb", 22, "ccc"));
     }
 }

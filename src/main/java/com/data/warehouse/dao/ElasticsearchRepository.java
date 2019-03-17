@@ -2,6 +2,7 @@ package com.data.warehouse.dao;
 
 import com.data.warehouse.entity.Entity;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
+import com.data.warehouse.utils.ReflectionHelper;
 import com.data.warehouse.utils.Serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.ActionFuture;
@@ -11,7 +12,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
 
 /**
  * Created by Ghazi Ennacer on 01/01/2019.
@@ -123,11 +121,8 @@ public class ElasticsearchRepository<T> implements Repository<T> {
     @Override
     public void delete(T entity) {
         String esId = null;
-        String esIndex = null;
-        String esType = null;
         try {
-            IndexTypeIdExtractor indexTypeIdExtractor = new IndexTypeIdExtractor(entity, esId, esIndex, esType).invoke();
-            esId = indexTypeIdExtractor.getEsId();
+            esId = ReflectionHelper.getEsId((Entity) entity);
             elasticsearchOperations.delete(entity.getClass(), esId);
         } catch (Exception e) {
             LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", esId, e.getCause());
@@ -157,54 +152,5 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             LOGGER.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
         }
         return false;
-    }
-
-    private class IndexTypeIdExtractor {
-        private T entity;
-        private String esId;
-        private String esIndex;
-        private String esType;
-
-        public IndexTypeIdExtractor(T entity, String esId, String esIndex, String esType) {
-            this.entity = entity;
-            this.esId = esId;
-            this.esIndex = esIndex;
-            this.esType = esType;
-        }
-
-        public String getEsId() {
-            return esId;
-        }
-
-        public String getEsIndex() {
-            return esIndex;
-        }
-
-        public String getEsType() {
-            return esType;
-        }
-
-        public IndexTypeIdExtractor invoke() throws IllegalAccessException, InvocationTargetException {
-            Field[] fields = entity.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(Id.class)) {
-                    esId = (String) field.get(entity);
-                }
-            }
-
-            for (Annotation annotation : entity.getClass().getAnnotations()) {
-                Class<? extends Annotation> type = annotation.annotationType();
-                for (Method method : type.getDeclaredMethods()) {
-                    Object value = method.invoke(annotation, (Object[]) null);
-                    if (method.getName().equals("indexName")) {
-                        esIndex = (String) value;
-                    } else if (method.getName().equals("type")) {
-                        esType = (String) value;
-                    }
-                }
-            }
-            return this;
-        }
     }
 }
