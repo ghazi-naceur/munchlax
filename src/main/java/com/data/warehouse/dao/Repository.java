@@ -1,6 +1,7 @@
 package com.data.warehouse.dao;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ghazi Ennacer on 01/01/2019.
@@ -20,4 +21,6 @@ public interface Repository<T> {
     void delete(T entity);
 
     void deleteEntityById(String index, String type, String id);
+
+    Boolean isEntityExist(String index, Map<String, Object> entityAsMap);
 }

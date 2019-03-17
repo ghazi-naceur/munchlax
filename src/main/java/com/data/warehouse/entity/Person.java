@@ -74,7 +74,6 @@ public class Person extends Entity implements Comparable<Person>, Serializable {
 
     public Map<String, Object> toMap() {
         Map<String, Object> person = new HashMap<>();
-        person.put("id", this.id);
         person.put("firstName", this.firstName);
         person.put("lastName", this.lastName);
         person.put("age", this.age);

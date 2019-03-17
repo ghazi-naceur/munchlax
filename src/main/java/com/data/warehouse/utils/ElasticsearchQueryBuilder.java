@@ -6,6 +6,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.data.warehouse.utils.Constants.FROM;
@@ -114,5 +116,14 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
+    public List<T> getDocumentsUsingEntityAsMap(String index, Map<String, Object> entityAsMap) throws IOException{
+        BoolQueryBuilder query = QueryBuilders.boolQuery();
+        for (Map.Entry<String, Object> entry : entityAsMap.entrySet()) {
+            query.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
+        }
+        SearchSourceBuilder builder = new SearchSourceBuilder().query(query)
+                .from(FROM).size(RESULT_SIZE);
+        return formatResult(index, builder);
+    }
 
 }

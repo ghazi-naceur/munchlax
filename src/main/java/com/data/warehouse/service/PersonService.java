@@ -4,6 +4,7 @@ package com.data.warehouse.service;
 import com.data.warehouse.entity.Person;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PersonService<T> {
 
@@ -21,5 +22,5 @@ public interface PersonService<T> {
 
     List<T> findAllPersons(String index, String type);
 
-    public boolean isPersonExist(T person);
+    public boolean isPersonExist(String index, Map<String, Object> entityAsMap);
 }

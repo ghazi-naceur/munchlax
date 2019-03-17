@@ -1,6 +1,7 @@
 package com.data.warehouse.dao;
 
 import com.data.warehouse.entity.Entity;
+import com.data.warehouse.utils.ElasticsearchQueryBuilder;
 import com.data.warehouse.utils.Serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.ActionFuture;
@@ -10,6 +11,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
 
 /**
  * Created by Ghazi Ennacer on 01/01/2019.
@@ -38,6 +43,9 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
+
+    @Autowired
+    private ElasticsearchQueryBuilder builder;
 
     @Override
     public T create(T entity) {
@@ -133,6 +141,22 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         } catch (Exception e) {
             LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Boolean isEntityExist(String index, Map<String, Object> entityAsMap) {
+
+        try {
+            List<T> entities = builder.getDocumentsUsingEntityAsMap(index, entityAsMap);
+            if (!entities.isEmpty()) {
+                LOGGER.error("The entity from the index {} with the id {} already exist ", index, ((Entity)entities.get(0)).getId());
+                return true;
+            }
+        } catch (IOException e) {
+            LOGGER.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
+        }
+        return false;
     }
 
     private class IndexTypeIdExtractor {

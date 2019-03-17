@@ -3,7 +3,9 @@ package com.data.warehouse.controller;
 
 import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
-import com.data.warehouse.utils.Constants;
+import com.data.warehouse.utils.ElasticsearchQueryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,21 @@ import static com.data.warehouse.utils.Constants.PERSON_TYPE;
 @RequestMapping("/persons")
 public class PersonController {
 
+    private static Logger logger = LoggerFactory.getLogger(PersonController.class.getName());
+
     @Autowired
     private PersonService service;
+
+    @Autowired
+    ElasticsearchQueryBuilder request;
 
     // TODO expose a DTO for person + failure cases are not all managed
     @PostMapping
     public ResponseEntity<Void> createPerson(@RequestBody Person person, UriComponentsBuilder ucBuilder) {
+
+        if (service.isPersonExist(PERSONS_INDEX, person.toMap())) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         service.savePerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(person.getId()).toUri());

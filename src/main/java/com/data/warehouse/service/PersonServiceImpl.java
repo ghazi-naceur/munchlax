@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PersonServiceImpl<T> implements PersonService<T> {
 
     @Autowired
-    Repository<T> personDAO;
+    private Repository<T> personDAO;
 
     public Person findById(String id, String index, String type) {
         return (Person) personDAO.getById(id, index, type);
@@ -43,7 +44,7 @@ public class PersonServiceImpl<T> implements PersonService<T> {
         return personDAO.getAll(index, type);
     }
 
-    public boolean isPersonExist(T person) {
-        return true;
+    public boolean isPersonExist(String index, Map<String, Object> entityAsMap) {
+        return personDAO.isEntityExist(index, entityAsMap);
     }
 }
