@@ -66,7 +66,7 @@ export class PersonComponent implements OnInit {
                     this.backToCreatePerson();
                     setTimeout(() => {
                         this.getAllPersons();
-                    }, 500)
+                    }, 1000)
                 },
                     errorCode => this.statusCode = errorCode);
         }

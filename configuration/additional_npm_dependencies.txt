@@ -7,3 +7,5 @@ npm install rxjs-compat
 npm i @angular/material
 
 npm i @angular/cdk
+
+npm install bootstrap jquery popper
