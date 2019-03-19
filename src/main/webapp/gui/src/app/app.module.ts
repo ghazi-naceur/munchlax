@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PersonComponent } from './persons/person.component';
 import { PersonService } from './persons/person.service';
 import { HttpModule } from '@angular/http';
+import { MatTableModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { HttpModule } from '@angular/http';
     AppRoutingModule,
 		HttpClientModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    MatTableModule
   ],
   providers: [
     PersonService

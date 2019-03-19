@@ -51,6 +51,9 @@ export class PersonComponent implements OnInit {
                 .subscribe(successCode => {
                     this.statusCode = successCode;
                     this.backToCreatePerson();
+                    setTimeout(() => {
+                        this.getAllPersons();
+                    }, 500)
                 },
                     errorCode => this.statusCode = errorCode
                 );
@@ -61,6 +64,9 @@ export class PersonComponent implements OnInit {
                     this.statusCode = successCode;
                     this.getAllPersons();
                     this.backToCreatePerson();
+                    setTimeout(() => {
+                        this.getAllPersons();
+                    }, 500)
                 },
                     errorCode => this.statusCode = errorCode);
         }
@@ -71,6 +77,7 @@ export class PersonComponent implements OnInit {
     backToCreatePerson() {
         this.personForm.reset();
         this.processValidation = false;
+        this.personIdToUpdate = null;
     }
 
     preProcessConfigurations() {
@@ -105,11 +112,14 @@ export class PersonComponent implements OnInit {
         this.preProcessConfigurations();
         this.personService.deletePersonById(personId)
             .subscribe(successCode => {
-                //this.statusCode = successCode;
+                this.statusCode = successCode;
                 //Expecting success code 204 from server
                 this.statusCode = 204;
-                this.getAllPersons();
                 this.backToCreatePerson();
+
+                setTimeout(() => {
+                    this.getAllPersons();
+                }, 500)
             },
                 errorCode => this.statusCode = errorCode);
     }
