@@ -1,9 +1,8 @@
 package com.data.warehouse;
 
-import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
-import com.data.warehouse.utils.ReflectionHelper;
+import com.data.warehouse.utils.FileHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +55,6 @@ public class Application implements CommandLineRunner {
 //        ReflectionHelper.getNonSpecialFields(new Person("aaa", "bbb", 22, "ccc"));
 //        ReflectionHelper.getEsIndex(new Person("aaa", "bbb", 22, "ccc"));
 //        ReflectionHelper.getEsType(new Person("aaa", "bbb", 22, "ccc"));
+        FileHelper.processCSVFile("D:\\github-projects\\munchlax\\files\\csv\\data_with_timestamps.csv");
     }
 }
