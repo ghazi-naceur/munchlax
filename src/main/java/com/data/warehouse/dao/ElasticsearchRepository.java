@@ -59,6 +59,15 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return null;
     }
 
+    @Override
+    public void create(String index, String type, Map<String, Object> entity){
+        try {
+            builder.indexEntity(index, type, UUID.randomUUID().toString(), entity);
+        } catch (IOException e) {
+            LOGGER.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public T update(T entity, String index, String type, String id) {

@@ -1,6 +1,8 @@
 package com.data.warehouse;
 
+import com.data.warehouse.service.DataFileService;
 import com.data.warehouse.service.PersonService;
+import com.data.warehouse.utils.Constants;
 import com.data.warehouse.utils.ElasticsearchQueryBuilder;
 import com.data.warehouse.utils.FileHelper;
 import org.slf4j.Logger;
@@ -9,6 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.data.warehouse.utils.Constants.CSV_DATA_FILE_INDEX;
+import static com.data.warehouse.utils.Constants.CSV_DATA_FILE_TYPE;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -20,6 +28,9 @@ public class Application implements CommandLineRunner {
 
     @Autowired
     ElasticsearchQueryBuilder request;
+
+    @Autowired
+    DataFileService dataFileService;
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(Application.class)
@@ -55,6 +66,9 @@ public class Application implements CommandLineRunner {
 //        ReflectionHelper.getNonSpecialFields(new Person("aaa", "bbb", 22, "ccc"));
 //        ReflectionHelper.getEsIndex(new Person("aaa", "bbb", 22, "ccc"));
 //        ReflectionHelper.getEsType(new Person("aaa", "bbb", 22, "ccc"));
-        FileHelper.processCSVFile("D:\\github-projects\\munchlax\\files\\csv\\data_with_timestamps.csv");
+        List<Map<String, Object>> listOfEntities = FileHelper.processCSVFile("D:\\github-projects\\munchlax\\files\\csv\\data_with_timestamps.csv");
+        listOfEntities.forEach(map -> {
+            dataFileService.saveDataFile(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map);
+        });
     }
 }

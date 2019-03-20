@@ -12,7 +12,14 @@ public final class Constants {
 
     public static final int FROM = 0;
     public static final int RESULT_SIZE = 100;
+
     public static final String PERSONS_INDEX = "persons";
     public static final String PERSON_TYPE = "person";
+
+    public static final String CSV_DATA_FILE_INDEX = "csvs";
+    public static final String CSV_DATA_FILE_TYPE = "csv";
+
     public static final String COMMA_SEPARATOR = ",";
+
+
 }

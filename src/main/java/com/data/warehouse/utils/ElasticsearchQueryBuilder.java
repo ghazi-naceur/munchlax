@@ -1,7 +1,11 @@
 package com.data.warehouse.utils;
 
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -17,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.data.warehouse.utils.Constants.FROM;
@@ -30,8 +35,6 @@ import static com.data.warehouse.utils.Constants.RESULT_SIZE;
 @SuppressWarnings("unchecked")
 @Service
 public class ElasticsearchQueryBuilder<T> {
-
-    // TODO Need to implement logger log4j + exclude the spring logger implementation
 
     RestHighLevelClient client;
 
@@ -116,7 +119,7 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
-    public List<T> getDocumentsUsingEntityAsMap(String index, Map<String, Object> entityAsMap) throws IOException{
+    public List<T> getDocumentsUsingEntityAsMap(String index, Map<String, Object> entityAsMap) throws IOException {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         for (Map.Entry<String, Object> entry : entityAsMap.entrySet()) {
             query.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
@@ -126,4 +129,20 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
+    public void indexEntity(String index, String type, String id, Map<String, Object> entity) throws IOException {
+        IndexRequest indexRequest = new IndexRequest(index, type, id);
+        indexRequest.source(entity);
+        client.index(indexRequest, RequestOptions.DEFAULT);
+    }
+
+    private void indexAlreadyExists(String index) throws IOException {
+        ClusterHealthRequest request = new ClusterHealthRequest();
+        ClusterHealthResponse response = client.cluster().health(request, RequestOptions.DEFAULT);
+        Set<String> indices = response.getIndices().keySet();
+
+        if (!indices.contains(index)) {
+            CreateIndexRequest indexRequest = new CreateIndexRequest(index);
+            client.indices().create(indexRequest, RequestOptions.DEFAULT);
+        }
+    }
 }
