@@ -129,6 +129,7 @@ public class ElasticsearchQueryBuilder<T> {
         return formatResult(index, builder);
     }
 
+    // TODO must use the ES Bulk
     public void indexEntity(String index, String type, String id, Map<String, Object> entity) throws IOException {
         IndexRequest indexRequest = new IndexRequest(index, type, id);
         indexRequest.source(entity);

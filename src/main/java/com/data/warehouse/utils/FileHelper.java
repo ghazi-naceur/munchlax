@@ -1,10 +1,7 @@
 package com.data.warehouse.utils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.data.warehouse.utils.Constants.*;
@@ -37,6 +34,10 @@ public final class FileHelper {
         }
 
         for (String[] value : values) {
+            //  if value contains a float value (with a , ), we will obtain an
+            //          and ArrayOutOffBoundException because value.length > keys.length
+            //          or we can loop on keys : for (int i = 0; i < keys.length; i++)
+            //          but the problem, we will loose the column with no header
             entity = new HashMap<>();
             for (int i = 0; i < value.length; i++) {
                 entity.put(keys[i], value[i]);
@@ -45,5 +46,13 @@ public final class FileHelper {
         }
         br.close();
         return entities;
+    }
+
+    public static Collection<File> listFilesInFolder(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            return Arrays.asList(files);
+        }
+        return Collections.emptySet();
     }
 }
