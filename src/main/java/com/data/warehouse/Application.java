@@ -74,15 +74,15 @@ public class Application implements CommandLineRunner {
 //        });
 
         // Process and insert multiple CSV files
-        Collection<File> files = FileHelper.listFilesInFolder(new File("D:\\github-projects\\munchlax\\files\\csv"));
-        files.forEach(file -> {
-            try {
-                FileHelper.processCSVFile(file.getAbsolutePath()).forEach(map -> {
-                    dataFileService.saveDataFile(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map);
-                });
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+//        Collection<File> files = FileHelper.listFilesInFolder(new File("D:\\github-projects\\munchlax\\files\\csv"));
+//        files.forEach(file -> {
+//            try {
+//                FileHelper.processCSVFile(file.getAbsolutePath()).forEach(map -> {
+//                    dataFileService.saveDataFile(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map);
+//                });
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        });
     }
 }
