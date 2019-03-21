@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
   <app-person></app-person>
+  <data-file></data-file>
        `
   // styleUrls: ['./app.component.css']
 })

@@ -37,3 +37,9 @@ DELETE http://localhost:8080/persons/11
 
 6- Get All Persons :
 GET http://localhost:8080/persons
+
+7- Save DataFile :
+POST http://localhost:8080/datafile
+{
+  "path": "D:\\github-projects\\munchlax\\files\\csv"
+}

@@ -1,0 +1,10 @@
+
+
+
+<form [formGroup]="dataFilesForm">
+  <input type="text" formControlName="path" placeholder="Provide your datafiles path" [(ngModel)]="providedInput">
+
+  <button type="button" class="btn btn-success btn-s" (click)="sendPath(providedInput)" [disabled]="isInvalid()">
+    Provide path
+  </button>
+</form>
