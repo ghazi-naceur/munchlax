@@ -19,6 +19,9 @@ public final class Constants {
     public static final String CSV_DATA_FILE_INDEX = "csvs";
     public static final String CSV_DATA_FILE_TYPE = "csv";
 
+    public static final String JSON_DATA_FILE_INDEX = "jsons";
+    public static final String JSON_DATA_FILE_TYPE = "json";
+
     public static final String COMMA_SEPARATOR = ",";
 
 

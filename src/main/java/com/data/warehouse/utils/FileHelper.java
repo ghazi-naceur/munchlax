@@ -1,10 +1,13 @@
 package com.data.warehouse.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.data.warehouse.utils.Constants.*;
+import static com.data.warehouse.utils.Constants.COMMA_SEPARATOR;
 
 /**
  * Created by Ghazi Naceur on 20/03/2019
@@ -46,6 +49,13 @@ public final class FileHelper {
         }
         br.close();
         return entities;
+    }
+
+    public static List<Map<String, Object>> processJSONFile(String path) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        TypeReference valueTypeRef = new TypeReference<List<Map<String, Object>>>() {
+        };
+        return objectMapper.readValue(new File(path), valueTypeRef);
     }
 
     public static Collection<File> listFilesInFolder(File directory) {

@@ -15,16 +15,11 @@ import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +32,7 @@ import java.util.UUID;
 @org.springframework.stereotype.Repository
 public class ElasticsearchRepository<T> implements Repository<T> {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ElasticsearchRepository.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ElasticsearchRepository.class.getName());
 
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
@@ -54,17 +49,17 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             elasticsearchOperations.index(indexQuery);
             return entity;
         } catch (Exception e) {
-            LOGGER.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
         }
         return null;
     }
 
     @Override
-    public void create(String index, String type, Map<String, Object> entity){
+    public void create(String index, String type, Map<String, Object> entity) {
         try {
             builder.indexEntity(index, type, UUID.randomUUID().toString(), entity);
         } catch (IOException e) {
-            LOGGER.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
         }
     }
 
@@ -86,7 +81,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
             elasticsearchOperations.update(request);
         } catch (Exception e) {
-            LOGGER.error("Error when trying to update the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error("Error when trying to update the document '{}' in Elasticsearch : {} ", entity, e.getCause());
         }
         return entity;
     }
@@ -101,7 +96,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             Object object = Serializer.getObject(response.getSource(), request.index());
             return (T) object;
         } catch (Exception e) {
-            LOGGER.error("Error when trying to get the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
+            logger.error("Error when trying to get the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
         }
         return null;
     }
@@ -122,7 +117,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             }
             return entities;
         } catch (Exception e) {
-            LOGGER.error("Error when trying to retrieve multiple documents from the index '{}' in Elasticsearch : {} ", index, e.getCause());
+            logger.error("Error when trying to retrieve multiple documents from the index '{}' in Elasticsearch : {} ", index, e.getCause());
         }
         return entities;
     }
@@ -134,7 +129,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             esId = ReflectionHelper.getEsId((Entity) entity);
             elasticsearchOperations.delete(entity.getClass(), esId);
         } catch (Exception e) {
-            LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", esId, e.getCause());
+            logger.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", esId, e.getCause());
         }
     }
 
@@ -143,7 +138,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         try {
             elasticsearchOperations.delete(index, type, id);
         } catch (Exception e) {
-            LOGGER.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
+            logger.error("Error when trying to delete the document with the id '{}' in Elasticsearch : {} ", id, e.getCause());
         }
     }
 
@@ -154,11 +149,11 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         try {
             List<T> entities = builder.getDocumentsUsingEntityAsMap(index, entityAsMap);
             if (!entities.isEmpty()) {
-                LOGGER.error("The entity from the index {} with the id {} already exist ", index, ((Entity)entities.get(0)).getId());
+                logger.error("The entity from the index {} with the id {} already exist ", index, ((Entity) entities.get(0)).getId());
                 return true;
             }
         } catch (IOException e) {
-            LOGGER.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
+            logger.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
         }
         return false;
     }
