@@ -33,14 +33,12 @@ public class DataFileServiceImpl implements DataFileService {
         Collection<File> files = FileHelper.listFilesInFolder(new File(dataFiles.getPath()));
         for (File file : files) {
             try {
-                if (file.getName().endsWith(".csv")) {
-                    FileHelper.processCSVFile(file.getAbsolutePath()).forEach(map -> {
-                        repo.create(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map);
-                    });
-                } else if (file.getName().endsWith(".json")) {
-                    for (Map<String, Object> map : FileHelper.processJSONFile(file.getAbsolutePath())) {
-                        repo.create(JSON_DATA_FILE_INDEX, JSON_DATA_FILE_TYPE, map);
-                    }
+                if (file.getName().endsWith(CSV_EXTENSION)) {
+                    FileHelper.processCSVFile(file.getAbsolutePath()).forEach(map -> repo.create(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map));
+                } else if (file.getName().endsWith(JSON_EXTENSION)) {
+                    FileHelper.processJSONFile(file.getAbsolutePath()).forEach(map -> repo.create(JSON_DATA_FILE_INDEX, JSON_DATA_FILE_TYPE, map));
+                } else if (file.getName().endsWith(XML_EXTENSION)) {
+                    FileHelper.processXMLFile(file.getAbsolutePath()).forEach(map -> repo.create(XML_DATA_FILE_INDEX, XML_DATA_FILE_TYPE, map));
                 }
             } catch (Exception e) {
                 logger.error("Error occurred when trying to save the data file from the path {} caused by : {}", dataFiles.getPath(), e);

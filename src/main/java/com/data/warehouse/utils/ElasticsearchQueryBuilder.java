@@ -10,6 +10,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -133,6 +134,12 @@ public class ElasticsearchQueryBuilder<T> {
     public void indexEntity(String index, String type, String id, Map<String, Object> entity) throws IOException {
         IndexRequest indexRequest = new IndexRequest(index, type, id);
         indexRequest.source(entity);
+        client.index(indexRequest, RequestOptions.DEFAULT);
+    }
+
+    public void indexEntityAsString(String index, String type, String id, String entity) throws IOException {
+        IndexRequest indexRequest = new IndexRequest(index, type, id);
+        indexRequest.source(entity, XContentType.JSON);
         client.index(indexRequest, RequestOptions.DEFAULT);
     }
 

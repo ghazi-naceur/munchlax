@@ -22,7 +22,14 @@ public final class Constants {
     public static final String JSON_DATA_FILE_INDEX = "jsons";
     public static final String JSON_DATA_FILE_TYPE = "json";
 
+    public static final String XML_DATA_FILE_INDEX = "xmls";
+    public static final String XML_DATA_FILE_TYPE = "xml";
+
     public static final String COMMA_SEPARATOR = ",";
+
+    public static final String CSV_EXTENSION = ".csv";
+    public static final String JSON_EXTENSION = ".json";
+    public static final String XML_EXTENSION = ".xml";
 
 
 }
