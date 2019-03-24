@@ -31,7 +31,7 @@ public class DataFileServiceImpl implements DataFileService {
     public void saveDataFile(DataFiles dataFiles) {
 
         Collection<File> files = FileHelper.listFilesInFolder(new File(dataFiles.getPath()));
-        for (File file : files) {
+        files.forEach(file -> {
             try {
                 if (file.getName().endsWith(CSV_EXTENSION)) {
                     FileHelper.processCSVFile(file.getAbsolutePath()).forEach(map -> repo.create(CSV_DATA_FILE_INDEX, CSV_DATA_FILE_TYPE, map));
@@ -43,6 +43,6 @@ public class DataFileServiceImpl implements DataFileService {
             } catch (Exception e) {
                 logger.error("Error occurred when trying to save the data file from the path {} caused by : {}", dataFiles.getPath(), e);
             }
-        }
+        });
     }
 }

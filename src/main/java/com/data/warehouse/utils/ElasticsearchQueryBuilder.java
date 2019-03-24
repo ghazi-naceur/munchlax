@@ -67,7 +67,7 @@ public class ElasticsearchQueryBuilder<T> {
             try {
                 return (T) Serializer.unmarshallSourceFromString(document.getSourceAsString(), document.getIndex());
             } catch (Exception e) {
-                throw new RuntimeException();
+                throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
     }

@@ -15,21 +15,27 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Created by Ghazi Naceur on 21/03/2019
  * Email: ghazi.ennacer@gmail.com
  */
-
+@SuppressWarnings("all")
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/datafile")
 public class DataFileController {
 
-    private static Logger logger = LoggerFactory.getLogger(DataFileService.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(DataFileController.class.getName());
 
     @Autowired
     private DataFileService service;
 
     @PostMapping
     public ResponseEntity<Void> savaDataFile(@RequestBody DataFiles dataFiles, UriComponentsBuilder ucBuilder) {
-        service.saveDataFile(dataFiles);
         HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        try {
+            service.saveDataFile(dataFiles);
+            logger.info("All files in the provided path {} are processed and inserted into Elasticsearch", dataFiles.getPath());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        } catch (Exception e){
+            logger.error("An error occurred when trying to process the files located under the path {}, caused by {}", dataFiles.getPath(), e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

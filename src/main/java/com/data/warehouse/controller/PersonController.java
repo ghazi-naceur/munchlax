@@ -32,53 +32,95 @@ public class PersonController {
     @Autowired
     ElasticsearchQueryBuilder request;
 
-    // TODO expose a DTO for person + failure cases are not all managed
     @PostMapping
     public ResponseEntity<Void> createPerson(@RequestBody Person person, UriComponentsBuilder ucBuilder) {
 
-        if (service.isPersonExist(PERSONS_INDEX, person.toMap())) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        service.savePerson(person);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(person.getId()).toUri());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        try {
+            if (service.isPersonExist(PERSONS_INDEX, person.toMap())) {
+                logger.warn("This person is already created {}", person.toString());
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            service.savePerson(person);
+            headers.setLocation(ucBuilder.path("/{id}").buildAndExpand(person.getId()).toUri());
+            logger.info("This person is created successfully {}", person.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to create a person {}, caused by {}", person.toString(), e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping
     public ResponseEntity<Void> updatePerson(@RequestBody Person person) {
-        service.updatePerson(person, PERSONS_INDEX, PERSON_TYPE, person.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            service.updatePerson(person, PERSONS_INDEX, PERSON_TYPE, person.getId());
+            logger.info("This person is updated successfully {}", person.toString());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to update a person {}, caused by {}", person.toString(), e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    // TODO Implement scan & scroll
     @GetMapping()
     public ResponseEntity<List<Person>> findAllPersons() {
-        List<Person> persons = service.findAllPersons(PERSONS_INDEX, PERSON_TYPE);
-        if (persons.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You can return HttpStatus.NOT_FOUND
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            List<Person> persons = service.findAllPersons(PERSONS_INDEX, PERSON_TYPE);
+            if (persons.isEmpty()) {
+                logger.warn("Your persons index is empty.");
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You can return HttpStatus.NOT_FOUND
+            }
+            return new ResponseEntity<>(persons, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to retrieve the first page of persons, caused by {}", e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Person> findPersonById(@PathVariable String id) {
-        Person person = service.findById(id, PERSONS_INDEX, PERSON_TYPE);
-        if (person == null) {
-            System.out.println("Person with id " + id + " not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            Person person = service.findById(id, PERSONS_INDEX, PERSON_TYPE);
+            if (person == null) {
+                logger.warn("Person with id {} is not found.", person.getId());
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            logger.info("Person with id {} is retrieved.", person.getId());
+            return new ResponseEntity<>(person, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to retrieve a person with the id {}, caused by {}", id, e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<Person> deletePerson(@RequestBody Person person) {
-        service.deletePerson(person);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            service.deletePerson(person);
+            logger.info("Person with id {} is deleted successfully.", person.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to delete a person with the id {}, caused by {}", person.getId(), e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Person> deletePersonById(@PathVariable String id) {
-        service.deletePersonById(PERSONS_INDEX, PERSON_TYPE, id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            service.deletePersonById(PERSONS_INDEX, PERSON_TYPE, id);
+            logger.info("Person with id {} is deleted successfully.", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to delete a person with the id {}, caused by {}", id, e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

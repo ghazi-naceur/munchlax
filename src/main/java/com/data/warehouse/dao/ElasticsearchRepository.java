@@ -29,9 +29,11 @@ import java.util.UUID;
  * Created by Ghazi Ennacer on 01/01/2019.
  * Email: ghazi.ennacer@gmail.com
  */
+@SuppressWarnings("unchecked")
 @org.springframework.stereotype.Repository
 public class ElasticsearchRepository<T> implements Repository<T> {
 
+    public static final String ERROR_MESSAGE = "Error when trying to insert the document '{}' in Elasticsearch : {} ";
     private static Logger logger = LoggerFactory.getLogger(ElasticsearchRepository.class.getName());
 
     @Autowired
@@ -49,7 +51,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             elasticsearchOperations.index(indexQuery);
             return entity;
         } catch (Exception e) {
-            logger.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error(ERROR_MESSAGE, entity, e.getCause());
         }
         return null;
     }
@@ -59,7 +61,7 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         try {
             builder.indexEntity(index, type, UUID.randomUUID().toString(), entity);
         } catch (IOException e) {
-            logger.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error(ERROR_MESSAGE, entity, e.getCause());
         }
     }
 
@@ -68,11 +70,10 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         try {
             builder.indexEntityAsString(index, type, UUID.randomUUID().toString(), entity);
         } catch (IOException e) {
-            logger.error("Error when trying to insert the document '{}' in Elasticsearch : {} ", entity, e.getCause());
+            logger.error(ERROR_MESSAGE, entity, e.getCause());
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T update(T entity, String index, String type, String id) {
 
@@ -87,7 +88,6 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             request.setType(type);
             request.setUpdateRequest(req);
             request.setClazz(entity.getClass());
-
             elasticsearchOperations.update(request);
         } catch (Exception e) {
             logger.error("Error when trying to update the document '{}' in Elasticsearch : {} ", entity, e.getCause());
@@ -95,7 +95,6 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return entity;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T getById(String id, String index, String type) {
         GetRequest request = new GetRequest(index, type, id);
@@ -110,7 +109,6 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<T> getAll(String index, String type) {
 
@@ -151,7 +149,6 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Boolean isEntityExist(String index, Map<String, Object> entityAsMap) {
 
