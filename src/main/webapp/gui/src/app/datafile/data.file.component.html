@@ -4,7 +4,18 @@
 <form [formGroup]="dataFilesForm">
   <input type="text" formControlName="path" placeholder="Provide your datafiles path" [(ngModel)]="providedInput">
 
-  <button type="button" class="btn btn-success btn-s" (click)="sendPath(providedInput)" [disabled]="isInvalid()">
+  <button type="button" class="btn btn-success btn-s" (click)="sendPath()" [disabled]="isInvalid()">
     Provide path
   </button>
 </form>
+<div *ngIf="statusCode; else processing">
+  <div *ngIf="statusCode === 201" [ngClass]="'success'">
+    Your files were processed successfully.
+  </div>
+  <div *ngIf="statusCode === 500" [ngClass]="'error'">
+    An error occurred when trying to process your files.
+  </div>
+</div>
+<ng-template #processing>
+  <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+</ng-template>

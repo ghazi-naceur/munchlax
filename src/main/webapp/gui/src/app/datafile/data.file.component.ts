@@ -12,6 +12,7 @@ export class DataFileComponent implements OnInit {
 
   providedInput: string;
   statusCode: number;
+  requestProcessing = false;
 
   dataFilesForm = new FormGroup({
     path: new FormControl('', Validators.required)
@@ -24,11 +25,18 @@ export class DataFileComponent implements OnInit {
 
   }
 
-  sendPath(path) {
+  preProcessConfigurations() {
+    this.statusCode = null;
+    this.requestProcessing = true;
+  }
+
+  sendPath() {
+    this.preProcessConfigurations();
     let dataFiles = this.dataFilesForm.value;
     this.dataFileService.sendPath(dataFiles).subscribe(successCode => {
       this.statusCode = successCode;
       this.providedInput = null;
+      this.requestProcessing = false;
     },
       errorCode => this.statusCode = errorCode
     );
