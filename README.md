@@ -49,8 +49,7 @@ Concerning the XML files, you need to provide files that respect this format :
 ```
 ### Enhancements (To be implemented)
 
-Processing files using the File System feature provided by Apache Camel.<br/>
-Inserting datafiles with an ES Bulk.
+Processing files using the File System feature provided by Apache Camel.
 
 ###### Note :
 This project is still in process ...
