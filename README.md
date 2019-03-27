@@ -47,9 +47,6 @@ Concerning the XML files, you need to provide files that respect this format :
    </record>
 </root>
 ```
-### Enhancements (To be implemented)
-
-Processing files using the File System feature provided by Apache Camel.
 
 ###### Note :
 This project is still in process ...

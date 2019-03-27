@@ -11,12 +11,16 @@ import { HttpModule } from '@angular/http';
 import { MatTableModule } from '@angular/material';
 import { DataFileComponent } from './datafile/data.file.component';
 import { DataFileService } from './datafile/data.file.service';
+import { NavbarComponent } from './navbar/navbar.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PersonComponent,
-    DataFileComponent
+    DataFileComponent,
+    NavbarComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
