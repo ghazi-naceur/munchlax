@@ -88,10 +88,20 @@ public final class FileHelper {
 
     public static Collection<File> listFilesInFolder(File directory) {
         File[] files = directory.listFiles();
-        if (files != null) {
-            return Arrays.asList(files);
+        if (files != null){
+            List<File> result = new ArrayList<>();
+
+            for (File file : files) {
+                if (file.isFile()){
+                    result.add(file);
+                } else if (file.isDirectory()) {
+                    result.addAll(listFilesInFolder(new File(file.getAbsolutePath())));
+                }
+            }
+            return result;
+        } else {
+            return Collections.emptyList();
         }
-        return Collections.emptySet();
     }
 
     private static Document convertXMLFileToXMLDocument(String filePath) throws ParserConfigurationException, IOException, SAXException {
