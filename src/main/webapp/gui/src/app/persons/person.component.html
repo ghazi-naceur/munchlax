@@ -10,21 +10,21 @@
     <table>
       <tr>
         <td>Enter First name</td>
-        <td><input formControlName="firstName">
+        <td><input class="form-control" formControlName="firstName">
           <label *ngIf="personForm.get('firstName').invalid && processValidation" [ngClass]="'error'"> First name is
             required. </label>
         </td>
       </tr>
       <tr>
         <td>Enter Last name</td>
-        <td><input formControlName="lastName">
+        <td><input class="form-control" formControlName="lastName">
           <label *ngIf="personForm.get('lastName').invalid && processValidation" [ngClass]="'error'"> Last name is
             required. </label>
         </td>
       </tr>
       <tr>
         <td>Enter age</td>
-        <td><input formControlName="age">
+        <td><input class="form-control" formControlName="age">
           <label *ngIf="personForm.get('age').invalid && processValidation" [ngClass]="'error'"> Age is
             required. </label>
         </td>
@@ -32,7 +32,7 @@
       <tr>
       <tr>
         <td>Enter occupation</td>
-        <td><input formControlName="occupation">
+        <td><input class="form-control" formControlName="occupation">
           <label *ngIf="personForm.get('occupation').invalid && processValidation" [ngClass]="'error'"> Ocuupation is
             required. </label>
         </td>

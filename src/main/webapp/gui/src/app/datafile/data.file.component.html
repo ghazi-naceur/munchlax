@@ -1,9 +1,10 @@
-
-
-
 <form [formGroup]="dataFilesForm">
-  <input type="text" formControlName="path" placeholder="Provide your datafiles path" [(ngModel)]="providedInput">
-
+  <div class="form-group row">
+    <div class="col-sm-6">
+      <input type="text" class="form-control" formControlName="path" placeholder="Provide your datafiles path"
+        [(ngModel)]="providedInput">
+    </div>
+  </div>
   <button type="button" class="btn btn-success btn-s" (click)="sendPath()" [disabled]="isInvalid()">
     Provide path
   </button>
@@ -19,3 +20,17 @@
 <ng-template #processing>
   <img *ngIf="requestProcessing" src="assets/images/loading.gif">
 </ng-template>
+
+<h3>Processed Files Details</h3>
+<table mdbTable class="table table-border">
+  <thead>
+    <tr>
+      <th>File name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr mdbTableCol *ngFor="let file of files">
+      <td>{{file}}</td>
+    </tr>
+  </tbody>
+</table>

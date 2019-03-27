@@ -20,14 +20,19 @@ export class DataFileService {
     constructor(private http: Http){
     }
 
-    sendPath(dataFiles: DataFiles): Observable<number> {
+    sendPath(dataFiles: DataFiles): Observable<string[]> {
         return this.http.post(this.datafilesUrl, dataFiles, this.options)
-            .map(success => success.status)
+            .map(this.extractData)
             .catch(this.handleError);
     }
     
     private handleError(error: Response | any) {
         console.error(error.message || error);
         return Observable.throw(error.status);
+    }
+
+    private extractData(res: Response) {
+	    let body = res.json();
+        return body;
     }
 }

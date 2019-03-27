@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Ghazi Naceur on 21/03/2019
  * Email: ghazi.ennacer@gmail.com
@@ -27,12 +30,13 @@ public class DataFileController {
     private DataFileService service;
 
     @PostMapping
-    public ResponseEntity<Void> savaDataFile(@RequestBody DataFiles dataFiles, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<List<String>> savaDataFile(@RequestBody DataFiles dataFiles, UriComponentsBuilder ucBuilder) {
         HttpHeaders headers = new HttpHeaders();
+        List<String> files = new ArrayList<>();
         try {
-            service.saveDataFile(dataFiles);
+            files = service.saveDataFile(dataFiles);
             logger.info("All files in the provided path {} are processed and inserted into Elasticsearch", dataFiles.getPath());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+            return new ResponseEntity<List<String>>(files, headers, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error("An error occurred when trying to process the files located under the path {}, caused by {}", dataFiles.getPath(), e);
             return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
