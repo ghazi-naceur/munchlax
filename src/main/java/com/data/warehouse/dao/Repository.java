@@ -22,6 +22,8 @@ public interface Repository<T> {
 
     List<T> getAll(String index, String type);
 
+    List<T> findAll(String index, String type, Class<T> clazz);
+
     void delete(T entity);
 
     void deleteEntityById(String index, String type, String id);

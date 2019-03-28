@@ -135,6 +135,18 @@ export class PersonComponent implements OnInit {
 
         this.preProcessConfigurations();
         let searchCriteria = this.searchPersonForm.value;
+        if (searchCriteria.firstName == "") {
+            delete searchCriteria.firstName
+        }
+        if (searchCriteria.lastName == "") {
+            delete searchCriteria.lastName
+        }
+        if (searchCriteria.age == "") {
+            delete searchCriteria.age
+        }
+        if (searchCriteria.occupation == "") {
+            delete searchCriteria.occupation
+        }
         this.personService.searchPersons(searchCriteria)
             .subscribe(data => this.persons = data,
                 errorCode => this.statusCode = errorCode);

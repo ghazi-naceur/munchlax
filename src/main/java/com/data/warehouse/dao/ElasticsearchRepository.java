@@ -15,8 +15,12 @@ import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ScrolledPage;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 
 import java.io.IOException;
@@ -124,6 +128,43 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             logger.error("Error when trying to retrieve multiple documents from the index '{}' in Elasticsearch : {} ", index, e.getCause());
         }
         return entities;
+    }
+
+    public List<T> findAll(String index, String type, Class<T> clazz) {
+        try {
+            SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                    .withIndices(index)
+                    .withTypes(type)
+                    .withQuery(QueryBuilders.matchAllQuery())
+                    .build();
+
+            List<T> result = new ArrayList<>();
+            Page<T> entities = elasticsearchOperations.startScroll(1000, searchQuery, clazz);
+            if (entities != null && !entities.getContent().isEmpty()) {
+                String scrollId = ((ScrolledPage<T>) entities).getScrollId();
+                boolean stillHasDocuments = true;
+                while (stillHasDocuments) {
+                    result.addAll(entities.getContent());
+                    entities = scroll(scrollId, clazz);
+                    if (entities == null || entities.getContent().isEmpty()) {
+                        stillHasDocuments = false;
+                    }
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error("Error when trying to retrieve all documents, caused by : {}", e);
+        }
+        return Collections.emptyList();
+    }
+
+    private Page<T> scroll(String scrollId, Class<T> clazz) {
+        try {
+            return elasticsearchOperations.continueScroll(scrollId, 1000, clazz);
+        } catch (Exception e) {
+            logger.error("Error when trying to scroll with the scroll_id {} in order to retrieve documents related to the entity {}, caused by  : {}", scrollId, clazz.getSimpleName(), e);
+        }
+        return null;
     }
 
     @Override

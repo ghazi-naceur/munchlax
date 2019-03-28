@@ -41,7 +41,8 @@ public class PersonServiceImpl<T> implements PersonService<T> {
     }
 
     public List<T> findAllPersons(String index, String type) {
-        return personDAO.getAll(index, type);
+//        return personDAO.getAll(index, type);
+        return personDAO.findAll(index, type, (Class<T>) Person.class);
     }
 
     public boolean isPersonExist(String index, Map<String, Object> entityAsMap) {
