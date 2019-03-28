@@ -2,8 +2,10 @@
     <a class="navbar-brand" href="/">Munchlax</a>
     <div class="navbar-expand mr-auto">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="person">Person</a>
-        <a class="nav-item nav-link" href="datafile">Data File</a>
+        <a class="nav-item nav-link" routerLink="/person" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:
+          true}">Person</a>
+          <a class="nav-item nav-link" routerLink="/datafile" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:
+            true}">Data File</a>
       </div>
     </div>
   </nav>
