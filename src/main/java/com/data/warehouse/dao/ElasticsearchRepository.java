@@ -20,10 +20,7 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Ghazi Ennacer on 01/01/2019.
@@ -162,5 +159,16 @@ public class ElasticsearchRepository<T> implements Repository<T> {
             logger.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
         }
         return false;
+    }
+
+    @Override
+    public List<T> searchEntities(String index, Map<String, Object> searchEntities) {
+
+        try {
+            return builder.getDocumentsUsingEntityAsMap(index, searchEntities);
+        } catch (IOException e) {
+            logger.error("An error occurred when trying to search for entity from the index {} : {}", index, e);
+        }
+        return Collections.emptyList();
     }
 }

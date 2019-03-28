@@ -23,4 +23,6 @@ public interface PersonService<T> {
     List<T> findAllPersons(String index, String type);
 
     public boolean isPersonExist(String index, Map<String, Object> entityAsMap);
+
+    List<Person> searchPersons(String index, Map<String, Object> searchCriteria);
 }

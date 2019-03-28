@@ -27,4 +27,6 @@ public interface Repository<T> {
     void deleteEntityById(String index, String type, String id);
 
     Boolean isEntityExist(String index, Map<String, Object> entityAsMap);
+
+    List<T> searchEntities(String index, Map<String, Object> searchEntities);
 }

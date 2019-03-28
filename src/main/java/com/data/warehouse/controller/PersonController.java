@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.data.warehouse.utils.Constants.PERSONS_INDEX;
 import static com.data.warehouse.utils.Constants.PERSON_TYPE;
@@ -120,6 +121,20 @@ public class PersonController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             logger.error("An error occurred when trying to delete a person with the id {}, caused by {}", id, e);
+            return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/search")
+    public ResponseEntity<List<Person>> searchPersons(@RequestBody Map<String, Object> searchCriteria, UriComponentsBuilder ucBuilder) {
+
+        HttpHeaders headers = new HttpHeaders();
+        try {
+            List<Person> person = service.searchPersons(PERSONS_INDEX, searchCriteria);
+            logger.info("A person search request is performed successfully.");
+            return new ResponseEntity<List<Person>>(person, headers, HttpStatus.FOUND);
+        } catch (Exception e) {
+            logger.error("An error occurred when trying to search for a person, caused by {}", e);
             return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

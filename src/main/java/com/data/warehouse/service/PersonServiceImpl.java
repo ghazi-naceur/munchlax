@@ -47,4 +47,9 @@ public class PersonServiceImpl<T> implements PersonService<T> {
     public boolean isPersonExist(String index, Map<String, Object> entityAsMap) {
         return personDAO.isEntityExist(index, entityAsMap);
     }
+
+    @Override
+    public List<Person> searchPersons(String index, Map<String, Object> searchCriteria) {
+        return (List<Person>) personDAO.searchEntities(index, searchCriteria);
+    }
 }
