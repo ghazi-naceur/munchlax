@@ -132,7 +132,7 @@ public class PersonController {
         try {
             List<Person> person = service.searchPersons(PERSONS_INDEX, searchCriteria);
             logger.info("A person search request is performed successfully.");
-            return new ResponseEntity<List<Person>>(person, headers, HttpStatus.FOUND);
+            return new ResponseEntity<List<Person>>(person, headers, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("An error occurred when trying to search for a person, caused by {}", e);
             return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);

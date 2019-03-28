@@ -123,7 +123,9 @@ public class ElasticsearchQueryBuilder<T> {
     public List<T> getDocumentsUsingEntityAsMap(String index, Map<String, Object> entityAsMap) throws IOException {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         for (Map.Entry<String, Object> entry : entityAsMap.entrySet()) {
-            query.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
+            if (entry.getValue() != null && !entry.getValue().equals("null")){
+                query.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
+            }
         }
         SearchSourceBuilder builder = new SearchSourceBuilder().query(query)
                 .from(FROM).size(RESULT_SIZE);

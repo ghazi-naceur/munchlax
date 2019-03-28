@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { PersonService } from './person.service';
 import { Person } from './person';
@@ -12,13 +12,15 @@ import { Person } from './person';
 
 export class PersonComponent implements OnInit {
 
-    //Component properties
     persons: Person[];
     statusCode: number;
     requestProcessing = false;
     personIdToUpdate = null;
     processValidation = false;
-    //Create form
+
+    constructor(private personService: PersonService, private formBuilder: FormBuilder) {
+    }
+
     personForm = new FormGroup({
         firstName: new FormControl('', Validators.required),
         lastName: new FormControl('', Validators.required),
@@ -26,9 +28,12 @@ export class PersonComponent implements OnInit {
         occupation: new FormControl('', Validators.required)
     });
 
-    //Create constructor to get service instance
-    constructor(private personService: PersonService) {
-    }
+    searchPersonForm = this.formBuilder.group({
+        firstName: ['', ],
+        lastName: ['', ],
+        age: ['', ],
+        occupation: ['', ]
+    });
 
     ngOnInit(): void {
         this.getAllPersons();
@@ -38,14 +43,11 @@ export class PersonComponent implements OnInit {
         this.processValidation = true;
 
         if (this.personForm.invalid) {
-            return; //Validation failed, exit from method.
+            return;
         }
 
         this.preProcessConfigurations();
         let person = this.personForm.value;
-        // this.personService.createPerson(person)
-        //     .subscribe(data => console.log(data), error => console.log(error));
-
         if (this.personIdToUpdate == null) {
             this.personService.createPerson(person)
                 .subscribe(successCode => {
@@ -113,7 +115,6 @@ export class PersonComponent implements OnInit {
         this.personService.deletePersonById(personId)
             .subscribe(successCode => {
                 this.statusCode = successCode;
-                //Expecting success code 204 from server
                 this.statusCode = 204;
                 this.backToCreatePerson();
 
@@ -122,5 +123,26 @@ export class PersonComponent implements OnInit {
                 }, 500)
             },
                 errorCode => this.statusCode = errorCode);
+    }
+
+    searchPersons(criteria) {
+        this.personService.searchPersons(criteria)
+            .subscribe(data => this.persons = data,
+                errorCode => this.statusCode = errorCode);
+    }
+
+    onSearchPersonFormSubmit() {
+
+        this.preProcessConfigurations();
+        let searchCriteria = this.searchPersonForm.value;
+        this.personService.searchPersons(searchCriteria)
+            .subscribe(data => this.persons = data,
+                errorCode => this.statusCode = errorCode);
+        this.requestProcessing = false;
+        this.searchPersonForm.reset();
+    }
+
+    refresh(){
+        this.searchPersonForm.reset();
     }
 }

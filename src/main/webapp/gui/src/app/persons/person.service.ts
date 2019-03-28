@@ -68,4 +68,10 @@ export class PersonService {
 			   .map(success => success.status)
 			   .catch(this.handleError);
     }
+
+    searchPersons(criteria: any): Observable<Person[]> {
+        return this.http.post(this.personUrl+"/search", criteria, this.options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
 }
