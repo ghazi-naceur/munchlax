@@ -3,7 +3,6 @@ package com.data.warehouse.controller;
 
 import com.data.warehouse.entity.Person;
 import com.data.warehouse.service.PersonService;
-import com.data.warehouse.utils.ElasticsearchQueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class PersonController {
 
     @Autowired
     private PersonService service;
-
-    @Autowired
-    ElasticsearchQueryBuilder request;
 
     @PostMapping
     public ResponseEntity<Void> createPerson(@RequestBody Person person, UriComponentsBuilder ucBuilder) {
@@ -65,7 +61,6 @@ public class PersonController {
         }
     }
 
-    // TODO Implement scan & scroll
     @GetMapping()
     public ResponseEntity<List<Person>> findAllPersons() {
         HttpHeaders headers = new HttpHeaders();

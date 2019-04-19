@@ -4,8 +4,8 @@ npm i @angular/http
 
 npm install rxjs-compat
 
-npm i @angular/material
-
-npm i @angular/cdk
-
 npm install bootstrap jquery popper
+
+npm install --save hammerjs
+
+npm install --save @angular/core @angular/material @angular/animations @angular/cdk

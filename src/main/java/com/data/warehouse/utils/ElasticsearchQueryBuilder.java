@@ -39,11 +39,13 @@ public class ElasticsearchQueryBuilder<T> {
 
     RestHighLevelClient client;
 
+//    You need to inject the RestHighLevelClient into the constructor !!!
+//    If not, you will get a client = null
     public ElasticsearchQueryBuilder(RestHighLevelClient client) {
         this.client = client;
     }
 
-    public T getDocumentFromIndex(String index, String type, String docId) throws IOException {
+    public T getDocumentFromId(String index, String type, String docId) throws IOException {
         T document = null;
         GetRequest getRequest = new GetRequest(index, type, docId);
         GetResponse getResponse = client.get(getRequest, RequestOptions.DEFAULT);

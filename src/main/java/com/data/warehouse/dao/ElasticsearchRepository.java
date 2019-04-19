@@ -75,6 +75,8 @@ public class ElasticsearchRepository<T> implements Repository<T> {
         }
     }
 
+    // TODO Maybe I should refactor this method + why entity as T after that cast it as Map
+    // TODO Maybe passing a Map directly ...
     @Override
     public T update(T entity, String index, String type, String id) {
 
@@ -189,7 +191,6 @@ public class ElasticsearchRepository<T> implements Repository<T> {
 
     @Override
     public Boolean isEntityExist(String index, Map<String, Object> entityAsMap) {
-
         try {
             List<T> entities = builder.getDocumentsUsingEntityAsMap(index, entityAsMap);
             if (!entities.isEmpty()) {

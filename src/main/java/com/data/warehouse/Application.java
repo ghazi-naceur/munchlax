@@ -47,7 +47,7 @@ public class Application implements CommandLineRunner {
 //        personService.savePerson(new Person("Netero", "Isaac", 125, "Hunter"));
 
         // 1
-//        request.getDocumentFromIndex(PERSONS_INDEX, PERSON_TYPE, "10");
+//        request.getDocumentFromId(PERSONS_INDEX, PERSON_TYPE, "10");
         // 2
 //        request.getDocumentsFromIndexUsingMatchQuery(PERSONS_INDEX, "lastName", "Takamura");
         // 3
