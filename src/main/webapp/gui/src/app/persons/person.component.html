@@ -105,7 +105,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr mdbTableCol *ngFor="let person of persons">
+    <tr mdbTableCol *ngFor="let person of persons | paginate: { itemsPerPage: 5, currentPage: p }">
       <td>{{person.firstName}}</td>
       <td>{{person.lastName}}</td>
       <td>{{person.age}}</td>
@@ -115,3 +115,4 @@
     </tr>
   </tbody>
 </table>
+<pagination-controls (pageChange)="p = $event"></pagination-controls>

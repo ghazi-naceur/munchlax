@@ -13,6 +13,7 @@ import { DataFileComponent } from './datafile/data.file.component';
 import { DataFileService } from './datafile/data.file.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -25,11 +26,12 @@ import { NotFoundComponent } from './not-found/not-found.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-		HttpClientModule,
+	HttpClientModule,
     ReactiveFormsModule,
     HttpModule,
     MatTableModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   providers: [
     PersonService,
