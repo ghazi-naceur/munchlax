@@ -37,7 +37,7 @@ public class DataFileController {
             files = service.saveDataFile(dataFiles);
             logger.info("All files in the provided path {} are processed and inserted into Elasticsearch", dataFiles.getPath());
             return new ResponseEntity<List<String>>(files, headers, HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("An error occurred when trying to process the files located under the path {}, caused by {}", dataFiles.getPath(), e);
             return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }

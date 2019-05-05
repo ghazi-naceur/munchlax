@@ -39,7 +39,7 @@ public class ElasticsearchQueryBuilder<T> {
 
     RestHighLevelClient client;
 
-//    You need to inject the RestHighLevelClient into the constructor !!!
+    //    You need to inject the RestHighLevelClient into the constructor !!!
 //    If not, you will get a client = null
     public ElasticsearchQueryBuilder(RestHighLevelClient client) {
         this.client = client;
@@ -125,7 +125,7 @@ public class ElasticsearchQueryBuilder<T> {
     public List<T> getDocumentsUsingEntityAsMap(String index, Map<String, Object> entityAsMap) throws IOException {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         for (Map.Entry<String, Object> entry : entityAsMap.entrySet()) {
-            if (entry.getValue() != null && !entry.getValue().equals("null")){
+            if (entry.getValue() != null && !entry.getValue().equals("null")) {
                 query.must(QueryBuilders.matchPhraseQuery(entry.getKey(), entry.getValue()));
             }
         }

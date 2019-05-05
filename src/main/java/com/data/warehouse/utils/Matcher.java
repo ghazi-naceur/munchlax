@@ -22,6 +22,7 @@ public final class Matcher {
 
     public static final Map<String, Class> MAPPER;
     public static final Map<Class, String> INVERTED_MAPPER;
+
     static {
         MAPPER = new HashMap<>();
         MAPPER.put(PERSONS_INDEX, Person.class);

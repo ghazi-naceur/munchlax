@@ -88,11 +88,11 @@ public final class FileHelper {
 
     public static Collection<File> listFilesInFolder(File directory) {
         File[] files = directory.listFiles();
-        if (files != null){
+        if (files != null) {
             List<File> result = new ArrayList<>();
 
             for (File file : files) {
-                if (file.isFile()){
+                if (file.isFile()) {
                     result.add(file);
                 } else if (file.isDirectory()) {
                     result.addAll(listFilesInFolder(new File(file.getAbsolutePath())));

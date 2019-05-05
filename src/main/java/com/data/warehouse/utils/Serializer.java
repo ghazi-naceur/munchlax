@@ -22,7 +22,7 @@ public final class Serializer {
                 .readValue(source, Matcher.MAPPER.get(index));
     }
 
-    public static Object getObject(Map<String, Object> map, String index){
+    public static Object getObject(Map<String, Object> map, String index) {
         return new ObjectMapper().convertValue(map, Matcher.MAPPER.get(index));
     }
 }

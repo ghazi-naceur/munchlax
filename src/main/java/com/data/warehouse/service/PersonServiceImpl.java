@@ -19,10 +19,6 @@ public class PersonServiceImpl<T> implements PersonService<T> {
         return (Person) personDAO.getById(id, index, type);
     }
 
-    public Person findByName(String name) {
-        return null;
-    }
-
     public void savePerson(T person) {
         personDAO.create(person);
     }

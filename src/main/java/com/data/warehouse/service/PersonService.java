@@ -10,8 +10,6 @@ public interface PersonService<T> {
 
     Person findById(String id, String index, String type);
 
-    Person findByName(String name);
-
     void savePerson(T person);
 
     void updatePerson(T person, String index, String type, String id);
